@@ -1,6 +1,5 @@
 {
-	"bin": {
-	},
+	"bin": {},
 	"dependencies": {},
 	"devDependencies": {
 		"@types/node": "^13",
