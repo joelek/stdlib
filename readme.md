@@ -9,5 +9,5 @@ TypeScript standard library.
 Install this package from GitHub.
 
 ```
-npm install -s joelek/ts-stdlib
+npm install joelek/ts-stdlib
 ```

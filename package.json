@@ -1,7 +1,6 @@
 {
 	"bin": {},
-	"dependencies": {},
-	"devDependencies": {
+	"dependencies": {
 		"@types/node": "^13",
 		"typescript": "^3"
 	},
@@ -13,7 +12,9 @@
 		"url": "https://github.com/joelek/ts-stdlib.git"
 	},
 	"scripts": {
-		"install": "tsc --build"
+		"build": "rm -rf ./build/ && npx tsc --build",
+		"clean": "rm -rf ./build/ ./node_modules/",
+		"install": "npm run build"
 	},
 	"version": "1.0.0"
 }
