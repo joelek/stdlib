@@ -1,11 +1,11 @@
 {
 	"bin": {},
-	"dependencies": {
-		"@types/node": "^13",
+	"devDependencies": {
 		"typescript": "^3"
 	},
+	"dependencies": {},
 	"license": "MIT",
-	"main": "./build/source/index.js",
+	"main": "./build/index.js",
 	"name": "@joelek/ts-stdlib",
 	"repository": {
 		"type": "git",
@@ -13,8 +13,7 @@
 	},
 	"scripts": {
 		"build": "rm -rf ./build/ && npx tsc --build",
-		"clean": "rm -rf ./build/ ./node_modules/",
-		"install": "npm run build"
+		"clean": "rm -rf ./build/ ./node_modules/"
 	},
 	"version": "1.0.0"
 }
