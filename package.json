@@ -1,9 +1,9 @@
 {
 	"bin": {},
-	"devDependencies": {
-		"typescript": "^3"
-	},
 	"dependencies": {},
+	"devDependencies": {
+		"typescript": "^4"
+	},
 	"license": "MIT",
 	"main": "./build/index.js",
 	"name": "@joelek/ts-stdlib",
