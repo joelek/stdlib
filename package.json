@@ -15,5 +15,5 @@
 		"build": "rm -rf ./build/ && npx tsc --build",
 		"clean": "rm -rf ./build/ ./node_modules/"
 	},
-	"version": "1.0.0"
+	"version": "0.0.0"
 }
