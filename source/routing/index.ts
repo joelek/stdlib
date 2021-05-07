@@ -32,6 +32,9 @@ export class MessageRouter<A extends MessageMap<A>> {
 		let observers = this.observers[type] as Set<MessageObserver<A[B]>> | undefined;
 		if (observers !== undefined) {
 			observers.delete(observer);
+			if (observers.size === 0) {
+				delete this.observers[type];
+			}
 		}
 	}
 
@@ -42,6 +45,10 @@ export class MessageRouter<A extends MessageMap<A>> {
 				observer(message);
 			}
 		}
+	}
+
+	size(): number {
+		return Object.keys(this.observers).length;
 	}
 };
 
@@ -73,6 +80,9 @@ export class NamespacedMessageRouter<A extends NamespacedMessageMap<A>> {
 		let router = this.routers[namespace] as MessageRouter<A[B]> | undefined;
 		if (router !== undefined) {
 			router.removeObserver(type, observer);
+			if (router.size() === 0) {
+				delete this.routers[namespace];
+			}
 		}
 	}
 
