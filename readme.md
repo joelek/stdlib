@@ -27,3 +27,7 @@ npm install joelek/ts-stdlib#master
 ```
 
 NB: This project targets TypeScript 4 in strict mode.
+
+## Roadmap
+
+* Migrate generic code from other projects.
