@@ -9,13 +9,15 @@ TypeScript standard library.
 The message router can be used to route messages between senders and observers.
 
 ```ts
+import * as stdlib from "@joelek/ts-stdlib";
+
 type MyMessageMap = {
 	"MyMessage": {
 		title: string;
 		message: string;
 	};
 };
-const router = new MessageRouter<MyMessageMap>();
+const router = new stdlib.routing.MessageRouter<MyMessageMap>();
 router.addObserver("MyMessage", (message) => {
 	console.log(message);
 });
@@ -28,6 +30,8 @@ router.route("MyMessage", {
 The namespaced message router can be used to group messages into distinct namespaces.
 
 ```ts
+import * as stdlib from "@joelek/ts-stdlib";
+
 type MyNamespacedMessageMap = {
 	"UserMessages": {
 		"MyMessage": {
@@ -36,7 +40,7 @@ type MyNamespacedMessageMap = {
 		};
 	};
 };
-const router = new NamespacedMessageRouter<MyNamespacedMessageMap>();
+const router = new stdlib.routing.NamespacedMessageRouter<MyNamespacedMessageMap>();
 router.addObserver("UserMessages", "MyMessage", (message) => {
 	console.log(message);
 });
