@@ -2,7 +2,7 @@
 	"bin": {},
 	"dependencies": {},
 	"devDependencies": {
-		"typescript": "^4"
+		"typescript": "^4.3.5"
 	},
 	"license": "MIT",
 	"main": "./dist/lib/index.js",
