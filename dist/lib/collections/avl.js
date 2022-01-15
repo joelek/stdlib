@@ -353,9 +353,9 @@ class Tree {
         }
         return length;
     }
-    lookup(filter) {
-        for (let entry of this.filter(filter)) {
-            return entry;
+    lookup(key) {
+        for (let entry of this.filter({ operator: "=", key: key })) {
+            return entry.value;
         }
     }
     remove(key) {

@@ -48,6 +48,6 @@ export declare class Tree<A> {
     filter(...filters: Filter[]): Iterable<Entry<A>>;
     insert(key: number, value: A): void;
     length(): number;
-    lookup(filter: Filter): Entry<A> | undefined;
+    lookup(key: number): A | undefined;
     remove(key: number): void;
 }
