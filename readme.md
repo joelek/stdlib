@@ -18,7 +18,7 @@ let hello = tree.lookup(1);
 let world = tree.lookup(2);
 ```
 
-The AVL-Tree adds filtering functionality that may be used to retrieve all entries whose keys match the supplied filters.
+The AVL-Tree adds filtering functionality that may be used to retrieve all entries whose keys match the supplied filters. The tree supports the "<", "<=", "=", ">=" and ">" filters.
 
 ```ts
 import * as stdlib from "@joelek/ts-stdlib";
