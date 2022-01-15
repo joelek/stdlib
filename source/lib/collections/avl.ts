@@ -371,9 +371,9 @@ export class Tree<A> {
 		return length;
 	}
 
-	lookup(filter: Filter): Entry<A> | undefined {
-		for (let entry of this.filter(filter)) {
-			return entry;
+	lookup(key: number): A | undefined {
+		for (let entry of this.filter({ operator: "=", key: key })) {
+			return entry.value;
 		}
 	}
 
