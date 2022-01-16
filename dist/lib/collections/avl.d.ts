@@ -15,7 +15,7 @@ export declare class Node<A> {
     private lower;
     private upper;
     constructor(key: number, value: A, height?: number);
-    compare(filter: Filter): number | undefined;
+    compare(filter: Filter): number;
     computeBalance(): number;
     computeHeight(): number;
     entry(): Entry<A>;
@@ -27,6 +27,7 @@ export declare class Node<A> {
     getPredecessor(): Node<A> | undefined;
     getSuccessor(): Node<A> | undefined;
     insert(node: Node<A>): Node<A>;
+    locate(filter: Filter): Node<A> | undefined;
     rebalance(): Node<A>;
     remove(key: number): Node<A> | undefined;
     rotateLeft(): Node<A>;
@@ -48,6 +49,7 @@ export declare class Tree<A> {
     filter(...filters: Filter[]): Iterable<Entry<A>>;
     insert(key: number, value: A): void;
     length(): number;
+    locate(filter: Filter): Entry<A> | undefined;
     lookup(key: number): A | undefined;
     remove(key: number): void;
 }

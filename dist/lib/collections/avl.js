@@ -11,63 +11,62 @@ class Node {
         this.upper = undefined;
     }
     compare(filter) {
-        let operator = filter.operator;
-        let key = filter.key;
-        if (operator === "<") {
-            if (key < this.key) {
-                return;
+        if (filter.operator === "<") {
+            if (this.key > filter.key) {
+                return -1;
             }
-            else if (key > this.key) {
+            else if (this.key < filter.key) {
                 return 0;
             }
             else {
                 return -1;
             }
         }
-        else if (operator === "<=") {
-            if (key < this.key) {
-                return;
-            }
-            else if (key > this.key) {
-                return 0;
-            }
-            else {
-                return 0;
-            }
-        }
-        else if (operator === "=") {
-            if (key < this.key) {
+        if (filter.operator === "<=") {
+            if (this.key > filter.key) {
                 return -1;
             }
-            else if (key > this.key) {
+            else if (this.key < filter.key) {
+                return 0;
+            }
+            else {
+                return 0;
+            }
+        }
+        if (filter.operator === "=") {
+            if (this.key > filter.key) {
+                return -1;
+            }
+            else if (this.key < filter.key) {
                 return 1;
             }
             else {
                 return 0;
             }
         }
-        else if (operator === ">=") {
-            if (key < this.key) {
+        if (filter.operator === ">=") {
+            if (this.key > filter.key) {
                 return 0;
             }
-            else if (key > this.key) {
-                return;
+            else if (this.key < filter.key) {
+                return 1;
             }
             else {
                 return 0;
             }
         }
-        else if (operator === ">") {
-            if (key < this.key) {
+        if (filter.operator === ">") {
+            if (this.key > filter.key) {
                 return 0;
             }
-            else if (key > this.key) {
-                return;
+            else if (this.key < filter.key) {
+                return 1;
             }
             else {
                 return 1;
             }
         }
+        throw `Expected code to be unreachable!`;
     }
     computeBalance() {
         var _a, _b, _c, _d;
@@ -89,9 +88,6 @@ class Node {
         let upper = true;
         for (let filter of filters) {
             let comparison = this.compare(filter);
-            if (comparison == null) {
-                return;
-            }
             lower = lower && comparison <= 0;
             current = current && comparison === 0;
             upper = upper && comparison >= 0;
@@ -173,6 +169,63 @@ class Node {
         }
         this.setHeight(this.computeHeight());
         return this.rebalance();
+    }
+    locate(filter) {
+        if (filter.key === this.key) {
+            if (filter.operator === "<") {
+                return this.getPredecessor();
+            }
+            if (filter.operator === "<=") {
+                return this;
+            }
+            if (filter.operator === "=") {
+                return this;
+            }
+            if (filter.operator === ">=") {
+                return this;
+            }
+            if (filter.operator === ">") {
+                return this.getSuccessor();
+            }
+        }
+        if (filter.key < this.key) {
+            if (this.lower != null) {
+                return this.lower.locate(filter);
+            }
+            else {
+                if (filter.operator === "<") {
+                    return this.getLowerParent();
+                }
+                if (filter.operator === "<=") {
+                    return this.getLowerParent();
+                }
+                if (filter.operator === ">=") {
+                    return this;
+                }
+                if (filter.operator === ">") {
+                    return this;
+                }
+            }
+        }
+        else {
+            if (this.upper != null) {
+                return this.upper.locate(filter);
+            }
+            else {
+                if (filter.operator === "<") {
+                    return this;
+                }
+                if (filter.operator === "<=") {
+                    return this;
+                }
+                if (filter.operator === ">=") {
+                    return this.getUpperParent();
+                }
+                if (filter.operator === ">") {
+                    return this.getUpperParent();
+                }
+            }
+        }
     }
     rebalance() {
         let balance = this.computeBalance();
@@ -353,10 +406,15 @@ class Tree {
         }
         return length;
     }
-    lookup(key) {
-        for (let entry of this.filter({ operator: "=", key: key })) {
-            return entry.value;
+    locate(filter) {
+        var _a;
+        if (this.root != null) {
+            return (_a = this.root.locate(filter)) === null || _a === void 0 ? void 0 : _a.entry();
         }
+    }
+    lookup(key) {
+        var _a;
+        return (_a = this.locate({ operator: "=", key: key })) === null || _a === void 0 ? void 0 : _a.value;
     }
     remove(key) {
         if (this.root != null) {

@@ -17,20 +17,20 @@ const Assert = {
         }
     },
     array: {
-        equal(one, two) {
+        equal(one, two, message = "") {
             if (one.length !== two.length) {
-                throw `Expected arrays to be of equal length!`;
+                throw message;
             }
             for (let i = 0; i < one.length; i++) {
                 if (one[i] !== two[i]) {
-                    throw `Expected elements at index ${i} to be equal!`;
+                    throw message;
                 }
             }
         }
     }
 };
-function log(string) {
-    globalThis.process.stdout.write(string);
+function log(...values) {
+    globalThis.console.log(...values);
 }
 ;
 function test(name, cb) {
@@ -86,81 +86,6 @@ test(`It should support filtering nodes without using a filter.`, (assert) => __
     let expected = [1, 2, 3, 4, 5];
     assert.array.equal(observed, expected);
 }));
-test(`It should support filtering nodes using a ">" filter.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
-    let n1 = new avl.Node(1, null);
-    let n2 = new avl.Node(2, null);
-    let n3 = new avl.Node(3, null);
-    let n4 = new avl.Node(4, null);
-    let n5 = new avl.Node(5, null);
-    n3.setLower(n1);
-    n3.setUpper(n5);
-    n5.setLower(n4);
-    n1.setUpper(n2);
-    let observed = Array.from(n3.filter({ operator: ">", key: 1 }))
-        .map((entry) => entry.key);
-    let expected = [2, 3, 4, 5];
-    assert.array.equal(observed, expected);
-}));
-test(`It should support filtering nodes using a ">=" filter.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
-    let n1 = new avl.Node(1, null);
-    let n2 = new avl.Node(2, null);
-    let n3 = new avl.Node(3, null);
-    let n4 = new avl.Node(4, null);
-    let n5 = new avl.Node(5, null);
-    n3.setLower(n1);
-    n3.setUpper(n5);
-    n5.setLower(n4);
-    n1.setUpper(n2);
-    let observed = Array.from(n3.filter({ operator: ">=", key: 1 }))
-        .map((entry) => entry.key);
-    let expected = [1, 2, 3, 4, 5];
-    assert.array.equal(observed, expected);
-}));
-test(`It should support filtering nodes using a "=" filter.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
-    let n1 = new avl.Node(1, null);
-    let n2 = new avl.Node(2, null);
-    let n3 = new avl.Node(3, null);
-    let n4 = new avl.Node(4, null);
-    let n5 = new avl.Node(5, null);
-    n3.setLower(n1);
-    n3.setUpper(n5);
-    n5.setLower(n4);
-    n1.setUpper(n2);
-    let observed = Array.from(n3.filter({ operator: "=", key: 1 }))
-        .map((entry) => entry.key);
-    let expected = [1];
-    assert.array.equal(observed, expected);
-}));
-test(`It should support filtering nodes using a "<=" filter.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
-    let n1 = new avl.Node(1, null);
-    let n2 = new avl.Node(2, null);
-    let n3 = new avl.Node(3, null);
-    let n4 = new avl.Node(4, null);
-    let n5 = new avl.Node(5, null);
-    n3.setLower(n1);
-    n3.setUpper(n5);
-    n5.setLower(n4);
-    n1.setUpper(n2);
-    let observed = Array.from(n3.filter({ operator: "<=", key: 5 }))
-        .map((entry) => entry.key);
-    let expected = [1, 2, 3, 4, 5];
-    assert.array.equal(observed, expected);
-}));
-test(`It should support filtering nodes using a "<" filter.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
-    let n1 = new avl.Node(1, null);
-    let n2 = new avl.Node(2, null);
-    let n3 = new avl.Node(3, null);
-    let n4 = new avl.Node(4, null);
-    let n5 = new avl.Node(5, null);
-    n3.setLower(n1);
-    n3.setUpper(n5);
-    n5.setLower(n4);
-    n1.setUpper(n2);
-    let observed = Array.from(n3.filter({ operator: "<", key: 5 }))
-        .map((entry) => entry.key);
-    let expected = [1, 2, 3, 4];
-    assert.array.equal(observed, expected);
-}));
 test(`It should support filtering nodes using a ">" filter and a "<" filter.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
     let n1 = new avl.Node(1, null);
     let n2 = new avl.Node(2, null);
@@ -191,6 +116,41 @@ test(`It should locate maximum nodes.`, (assert) => __awaiter(void 0, void 0, vo
     assert.true(n3.getMaximum() === n5);
     assert.true(n4.getMaximum() === n4);
     assert.true(n5.getMaximum() === n5);
+}));
+test(`It should support filtering nodes using a single filter.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+    let n1 = new avl.Node(1, null);
+    let n3 = new avl.Node(3, null);
+    let n5 = new avl.Node(5, null);
+    let n7 = new avl.Node(7, null);
+    let n9 = new avl.Node(9, null);
+    n5.setLower(n1);
+    n5.setUpper(n9);
+    n9.setLower(n7);
+    n1.setUpper(n3);
+    let operators = [">", ">=", "=", "<=", "<"];
+    let keys = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    for (let operator of operators) {
+        for (let key of keys) {
+            let observed = Array.from(n5.filter({ operator: operator, key: key })).map((entry) => entry.key);
+            let expected = [];
+            if (operator === "<") {
+                expected = keys.filter((k) => k % 2 === 1 && k < key);
+            }
+            else if (operator === "<=") {
+                expected = keys.filter((k) => k % 2 === 1 && k <= key);
+            }
+            else if (operator === "=") {
+                expected = keys.filter((k) => k % 2 === 1 && k === key);
+            }
+            else if (operator === ">=") {
+                expected = keys.filter((k) => k % 2 === 1 && k >= key);
+            }
+            else if (operator === ">") {
+                expected = keys.filter((k) => k % 2 === 1 && k > key);
+            }
+            assert.array.equal(observed, expected, `Expected ${observed} for operator "${operator}" and key ${key} to be ${expected}!`);
+        }
+    }
 }));
 test(`It should locate minimum nodes.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
     let n1 = new avl.Node(1, null);
@@ -337,6 +297,52 @@ test(`It should support inserting 1,2,3 in 3,2,1 order.`, (assert) => __awaiter(
     assert.true(r === n2);
     assert.true(r.getLower() === n1);
     assert.true(r.getUpper() === n3);
+}));
+test(`It should support locating nodes.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+    var _o;
+    let n1 = new avl.Node(1, null);
+    let n3 = new avl.Node(3, null);
+    let n5 = new avl.Node(5, null);
+    let n7 = new avl.Node(7, null);
+    let n9 = new avl.Node(9, null);
+    n5.setLower(n1);
+    n5.setUpper(n9);
+    n9.setLower(n7);
+    n1.setUpper(n3);
+    let operators = [">", ">=", "=", "<=", "<"];
+    let keys = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    for (let operator of operators) {
+        for (let key of keys) {
+            let observed = (_o = n5.locate({ operator: operator, key: key })) === null || _o === void 0 ? void 0 : _o.entry().key;
+            let expected;
+            if (operator === "<") {
+                if (key >= 2) {
+                    expected = key - (key % 2 === 0 ? 1 : 2);
+                }
+            }
+            else if (operator === "<=") {
+                if (key >= 1) {
+                    expected = key - (key % 2 === 0 ? 1 : 0);
+                }
+            }
+            else if (operator === "=") {
+                if (key % 2 === 1) {
+                    expected = key;
+                }
+            }
+            else if (operator === ">=") {
+                if (key <= 9) {
+                    expected = key + (key % 2 === 0 ? 1 : 0);
+                }
+            }
+            else if (operator === ">") {
+                if (key <= 8) {
+                    expected = key + (key % 2 === 0 ? 1 : 2);
+                }
+            }
+            assert.true(observed === expected, `Expected ${observed} for operator "${operator}" and key ${key} to be ${expected}!`);
+        }
+    }
 }));
 test(`It should support removing nodes with no children.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
     let n1 = new avl.Node(1, null, 2);
