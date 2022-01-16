@@ -20,8 +20,8 @@ const Assert = {
 	}
 };
 
-function log(string: string): void {
-	(globalThis as any).process.stdout.write(string);
+function log(...values: Array<any>): void {
+	(globalThis as any).console.log(...values);
 };
 
 function test(name: string, cb: (assert: typeof Assert) => Promise<any>): void {
