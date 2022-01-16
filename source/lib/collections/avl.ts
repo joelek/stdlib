@@ -27,50 +27,53 @@ export class Node<A> {
 		this.upper = undefined;
 	}
 
-	compare(filter: Filter): number | undefined {
-		let operator = filter.operator;
-		let key = filter.key;
-		if (operator === "<") {
-			if (key < this.key) {
-				return;
-			} else if (key > this.key) {
+	compare(filter: Filter): number {
+		if (filter.operator === "<") {
+			if (this.key > filter.key) {
+				return -1;
+			} else if (this.key < filter.key) {
 				return 0;
 			} else {
 				return -1;
 			}
-		} else if (operator === "<=") {
-			if (key < this.key) {
-				return;
-			} else if (key > this.key) {
+		}
+		if (filter.operator === "<=") {
+			if (this.key > filter.key) {
+				return -1;
+			} else if (this.key < filter.key) {
 				return 0;
 			} else {
 				return 0;
 			}
-		} else if (operator === "=") {
-			if (key < this.key) {
+		}
+		if (filter.operator === "=") {
+			if (this.key > filter.key) {
 				return -1;
-			} else if (key > this.key) {
+			} else if (this.key < filter.key) {
 				return 1;
 			} else {
 				return 0;
 			}
-		} else if (operator === ">=") {
-			if (key < this.key) {
+		}
+		if (filter.operator === ">=") {
+			if (this.key > filter.key) {
 				return 0;
-			} else if (key > this.key) {
-				return;
+			} else if (this.key < filter.key) {
+				return 1;
 			} else {
 				return 0;
 			}
-		} else if (operator === ">") {
-			if (key < this.key) {
+		}
+		if (filter.operator === ">") {
+			if (this.key > filter.key) {
 				return 0;
-			} else if (key > this.key) {
-				return;
+			} else if (this.key < filter.key) {
+				return 1;
 			} else {
 				return 1;
 			}
 		}
+		throw `Expected code to be unreachable!`;
 	}
 
 	computeBalance(): number {
@@ -94,9 +97,6 @@ export class Node<A> {
 		let upper = true;
 		for (let filter of filters) {
 			let comparison = this.compare(filter);
-			if (comparison == null) {
-				return;
-			}
 			lower = lower && comparison <= 0;
 			current = current && comparison === 0;
 			upper = upper && comparison >= 0;
