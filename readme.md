@@ -14,8 +14,8 @@ import * as stdlib from "@joelek/ts-stdlib";
 let tree = new stdlib.collections.avl.Tree<string>();
 tree.insert(1, "hello");
 tree.insert(2, "world");
-let hello = tree.lookup(1);
-let world = tree.lookup(2);
+console.log(tree.lookup(1)); // Outputs entry whose value is "hello".
+console.log(tree.lookup(2)); // Outputs entry whose value is "world".
 ```
 
 The AVL-Tree adds filtering functionality that may be used to retrieve all entries whose keys match the supplied filters. The tree supports the `<`, `<=`, `=`, `>=` and `>` filters.
@@ -27,9 +27,9 @@ let tree = new stdlib.collections.avl.Tree<string>();
 tree.insert(1, "hello");
 tree.insert(2, "world");
 for (let entry of tree.filter({ operator: ">", key: 0 }, { operator: "<", key: 2 })) {
-	console.log(entry); // Outputs "hello".
+	console.log(entry); // Outputs entry whose value is "hello".
 }
-let entry = tree.locate({ operator: ">", key: 1 }); // Outputs "world".
+console.log(tree.locate({ operator: ">", key: 1 })); // Outputs entry whose value is "world".
 ```
 
 ### Routing
