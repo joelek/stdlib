@@ -29,6 +29,7 @@ tree.insert(2, "world");
 for (let entry of tree.filter({ operator: ">", key: 0 }, { operator: "<", key: 2 })) {
 	console.log(entry); // Outputs "hello".
 }
+let entry = tree.locate({ operator: ">", key: 1 }); // Outputs "world".
 ```
 
 ### Routing

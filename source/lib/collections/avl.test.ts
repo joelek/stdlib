@@ -344,6 +344,48 @@ test(`It should support inserting 1,2,3 in 3,2,1 order.`, async (assert) => {
 	assert.true(r.getUpper() === n3);
 });
 
+test(`It should support locating nodes.`, async (assert) => {
+	let n1 = new avl.Node(1, null);
+	let n3 = new avl.Node(3, null);
+	let n5 = new avl.Node(5, null);
+	let n7 = new avl.Node(7, null);
+	let n9 = new avl.Node(9, null);
+	n5.setLower(n1);
+	n5.setUpper(n9);
+	n9.setLower(n7);
+	n1.setUpper(n3);
+	let operators = [">", ">=", "=", "<=", "<"] as Array<avl.Operator>;
+	let keys = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+	for (let operator of operators) {
+		for (let key of keys) {
+			let observed = n5.locate({ operator: operator, key: key })?.entry().key;
+			let expected: number | undefined;
+			if (operator === "<") {
+				if (key >= 2) {
+					expected = key - (key % 2 === 0 ? 1 : 2);
+				}
+			} else if (operator === "<=") {
+				if (key >= 1) {
+					expected = key - (key % 2 === 0 ? 1 : 0);
+				}
+			} else if (operator === "=") {
+				if (key % 2 === 1) {
+					expected = key;
+				}
+			} else if (operator === ">=") {
+				if (key <= 9) {
+					expected = key + (key % 2 === 0 ? 1 : 0);
+				}
+			} else if (operator === ">") {
+				if (key <= 8) {
+					expected = key + (key % 2 === 0 ? 1 : 2);
+				}
+			}
+			assert.true(observed === expected, `Expected ${observed} for operator "${operator}" and key ${key} to be ${expected}!`);
+		}
+	}
+});
+
 test(`It should support removing nodes with no children.`, async (assert) => {
 	let n1 = new avl.Node(1, null, 2);
 	let n2 = new avl.Node(2, null, 1);

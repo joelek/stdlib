@@ -184,6 +184,61 @@ export class Node<A> {
 		return this.rebalance();
 	}
 
+	locate(filter: Filter): Node<A> | undefined {
+		if (filter.key === this.key) {
+			if (filter.operator === "<") {
+				return this.getPredecessor();
+			}
+			if (filter.operator === "<=") {
+				return this;
+			}
+			if (filter.operator === "=") {
+				return this;
+			}
+			if (filter.operator === ">=") {
+				return this;
+			}
+			if (filter.operator === ">") {
+				return this.getSuccessor();
+			}
+		}
+		if (filter.key < this.key) {
+			if (this.lower != null) {
+				return this.lower.locate(filter);
+			} else {
+				if (filter.operator === "<") {
+					return this.getLowerParent();
+				}
+				if (filter.operator === "<=") {
+					return this.getLowerParent();
+				}
+				if (filter.operator === ">=") {
+					return this;
+				}
+				if (filter.operator === ">") {
+					return this;
+				}
+			}
+		} else {
+			if (this.upper != null) {
+				return this.upper.locate(filter);
+			} else {
+				if (filter.operator === "<") {
+					return this;
+				}
+				if (filter.operator === "<=") {
+					return this;
+				}
+				if (filter.operator === ">=") {
+					return this.getUpperParent();
+				}
+				if (filter.operator === ">") {
+					return this.getUpperParent();
+				}
+			}
+		}
+	}
+
 	rebalance(): Node<A> {
 		let balance = this.computeBalance();
 		if (balance < -1) {
@@ -371,10 +426,14 @@ export class Tree<A> {
 		return length;
 	}
 
-	lookup(key: number): A | undefined {
-		for (let entry of this.filter({ operator: "=", key: key })) {
-			return entry.value;
+	locate(filter: Filter): Entry<A> | undefined {
+		if (this.root != null) {
+			return this.root.locate(filter)?.entry();
 		}
+	}
+
+	lookup(key: number): A | undefined {
+		return this.locate({ operator: "=", key: key })?.value;
 	}
 
 	remove(key: number): void {
