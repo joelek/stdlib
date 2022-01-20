@@ -113,3 +113,4 @@ NB: This project targets TypeScript 4 in strict mode.
 ## Roadmap
 
 * Migrate generic code from other projects.
+* Prevent AVL-tree from being mutated while iterating.
