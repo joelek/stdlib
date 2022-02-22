@@ -539,3 +539,60 @@ test(`It should update all pointers when setting the upper child.`, async (asser
 	assert.true(n1.getUpper() === undefined);
 	assert.true(n2.getUpper() === n0);
 });
+
+test(`It should support for-of iteration.`, async (assert) => {
+	let tree = new avl.Tree<null>();
+	tree.insert(1, null);
+	tree.insert(2, null);
+	let observed = [] as Array<number>;
+	for (let entry of tree) {
+		observed.push(entry.key);
+	}
+	let expected = [1, 2];
+	assert.array.equal(observed, expected);
+});
+
+test(`It should support removing all nodes stored in the tree.`, async (assert) => {
+	let tree = new avl.Tree<null>();
+	tree.insert(1, null);
+	tree.insert(2, null);
+	tree.clear();
+	assert.true(tree.lookup(1) === undefined);
+	assert.true(tree.lookup(2) === undefined);
+});
+
+test(`It should support filtering.`, async (assert) => {
+	let tree = new avl.Tree<null>();
+	tree.insert(1, null);
+	tree.insert(2, null);
+	let observed = Array.from(tree.filter()).map((entry) => entry.key);
+	let expected = [1, 2];
+	assert.array.equal(observed, expected);
+});
+
+test(`It should support insertions, lookups and removals.`, async (assert) => {
+	let tree = new avl.Tree<null>();
+	tree.insert(1, null);
+	assert.true(tree.lookup(1) === null);
+	tree.remove(1);
+	assert.true(tree.lookup(1) === undefined);
+});
+
+test(`It should keep track of the number of nodes stored in the tree.`, async (assert) => {
+	let tree = new avl.Tree<null>();
+	assert.true(tree.length() === 0);
+	tree.insert(1, null);
+	assert.true(tree.length() === 1);
+	tree.insert(2, null);
+	assert.true(tree.length() === 2);
+	tree.remove(2);
+	assert.true(tree.length() === 1);
+	tree.remove(1);
+	assert.true(tree.length() === 0);
+});
+
+test(`It should support locating a node through a filter.`, async (assert) => {
+	let tree = new avl.Tree<null>();
+	tree.insert(1, null);
+	assert.true(tree.locate({ operator: "=", key: 1 })?.key === 1);
+});

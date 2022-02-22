@@ -389,7 +389,7 @@ export class Tree<A> {
 		this.root = undefined;
 	}
 
-	* [Symbol.iterator](): Iterable<Entry<A>> {
+	* [Symbol.iterator](): Iterator<Entry<A>> {
 		yield * this.filter();
 	}
 
@@ -420,7 +420,7 @@ export class Tree<A> {
 
 	length(): number {
 		let length = 0;
-		for (let entry in this) {
+		for (let entry of this) {
 			length += 1;
 		}
 		return length;
