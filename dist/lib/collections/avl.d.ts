@@ -44,7 +44,7 @@ export declare class Node<A> {
 export declare class Tree<A> {
     private root;
     constructor();
-    [Symbol.iterator](): Iterable<Entry<A>>;
+    [Symbol.iterator](): Iterator<Entry<A>>;
     clear(): void;
     filter(...filters: Filter[]): Iterable<Entry<A>>;
     insert(key: number, value: A): void;

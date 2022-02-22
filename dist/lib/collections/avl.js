@@ -401,7 +401,7 @@ class Tree {
     }
     length() {
         let length = 0;
-        for (let entry in this) {
+        for (let entry of this) {
             length += 1;
         }
         return length;
