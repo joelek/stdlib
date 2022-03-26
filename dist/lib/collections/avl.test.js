@@ -586,3 +586,11 @@ test(`It should support locating a node through a filter.`, (assert) => __awaite
     tree.insert(1, null);
     assert.true(((_p = tree.locate({ operator: "=", key: 1 })) === null || _p === void 0 ? void 0 : _p.key) === 1);
 }));
+test(`It should not locate removed nodes.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+    var _q;
+    let tree = new avl.Tree();
+    tree.insert(0, null);
+    tree.insert(1, null);
+    tree.remove(0);
+    assert.true(((_q = tree.locate({ operator: "<=", key: 0 })) === null || _q === void 0 ? void 0 : _q.key) === undefined);
+}));

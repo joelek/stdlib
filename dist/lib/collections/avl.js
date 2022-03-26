@@ -391,9 +391,11 @@ class Tree {
         }
     }
     insert(key, value) {
+        var _a;
         let node = new Node(key, value);
         if (this.root != null) {
             this.root = this.root.insert(node);
+            (_a = this.root) === null || _a === void 0 ? void 0 : _a.setParent(undefined);
         }
         else {
             this.root = node;
@@ -417,8 +419,10 @@ class Tree {
         return (_a = this.locate({ operator: "=", key: key })) === null || _a === void 0 ? void 0 : _a.value;
     }
     remove(key) {
+        var _a;
         if (this.root != null) {
             this.root = this.root.remove(key);
+            (_a = this.root) === null || _a === void 0 ? void 0 : _a.setParent(undefined);
         }
     }
 }
