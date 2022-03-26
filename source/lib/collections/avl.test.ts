@@ -596,3 +596,11 @@ test(`It should support locating a node through a filter.`, async (assert) => {
 	tree.insert(1, null);
 	assert.true(tree.locate({ operator: "=", key: 1 })?.key === 1);
 });
+
+test(`It should not locate removed nodes.`, async (assert) => {
+	let tree = new avl.Tree<null>();
+	tree.insert(0, null);
+	tree.insert(1, null);
+	tree.remove(0);
+	assert.true(tree.locate({ operator: "<=", key: 0 })?.key === undefined);
+});

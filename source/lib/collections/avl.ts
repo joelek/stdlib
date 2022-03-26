@@ -413,6 +413,7 @@ export class Tree<A> {
 		let node = new Node<A>(key, value);
 		if (this.root != null) {
 			this.root = this.root.insert(node);
+			this.root?.setParent(undefined);
 		} else {
 			this.root = node;
 		}
@@ -439,6 +440,7 @@ export class Tree<A> {
 	remove(key: number): void {
 		if (this.root != null) {
 			this.root = this.root.remove(key);
+			this.root?.setParent(undefined);
 		}
 	}
 };
