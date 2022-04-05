@@ -384,11 +384,11 @@ test(`It should support removing nodes with one upper child.`, async (assert) =>
 });
 
 test(`It should support removing nodes with two children through substitution.`, async (assert) => {
-	let n1 = new avl.Node(1, null, 2);
-	let n2 = new avl.Node(2, null, 1);
-	let n3 = new avl.Node(3, null, 3);
-	let n4 = new avl.Node(4, null, 2);
-	let n5 = new avl.Node(5, null, 1);
+	let n1 = new avl.Node(1, 1, 2);
+	let n2 = new avl.Node(2, 2, 1);
+	let n3 = new avl.Node(3, 3, 3);
+	let n4 = new avl.Node(4, 4, 2);
+	let n5 = new avl.Node(5, 5, 1);
 	n1.setUpper(n2);
 	n3.setLower(n1);
 	n3.setUpper(n5);
@@ -396,6 +396,7 @@ test(`It should support removing nodes with two children through substitution.`,
 	let result = n3.remove(3);
 	assert.true(result === n3);
 	assert.true(result?.entry().key === 4);
+	assert.true(result?.entry().value === 4);
 	assert.true(n3.getLower() === n1);
 	assert.true(n3.getUpper() === n5);
 });
