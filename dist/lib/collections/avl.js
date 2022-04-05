@@ -261,10 +261,10 @@ class Node {
         if (key === this.key) {
             if (this.lower != null) {
                 if (this.upper != null) {
-                    let minimum = this.upper.getMinimum();
-                    let key = minimum.key;
+                    let { key, value } = this.upper.getMinimum();
                     this.setUpper(this.upper.remove(key));
                     this.key = key;
+                    this.value = value;
                     this.setHeight(this.computeHeight());
                     return this.rebalance();
                 }
