@@ -7,7 +7,7 @@ const Assert = {
 		}
 	},
 	array: {
-		equal<A>(one: Array<A>, two: Array<A>, message: string = ""): void {
+		equals<A>(one: Array<A>, two: Array<A>, message: string = ""): void {
 			if (one.length !== two.length) {
 				throw message;
 			}
@@ -77,7 +77,7 @@ test(`It should support filtering nodes without using a filter.`, async (assert)
 	n1.setUpper(n2);
 	let observed = Array.from(n3.filter()).map((entry) => entry.key);
 	let expected = [1, 2, 3, 4, 5] as Array<number>;
-	assert.array.equal(observed, expected);
+	assert.array.equals(observed, expected);
 });
 
 test(`It should support filtering nodes using a ">" filter and a "<" filter.`, async (assert) => {
@@ -93,7 +93,7 @@ test(`It should support filtering nodes using a ">" filter and a "<" filter.`, a
 	let observed = Array.from(n3.filter({ operator: ">", key: 1 }, { operator: "<", key: 5 }))
 		.map((entry) => entry.key);
 	let expected = [2, 3, 4] as Array<number>;
-	assert.array.equal(observed, expected);
+	assert.array.equals(observed, expected);
 });
 
 test(`It should locate maximum nodes.`, async (assert) => {
@@ -140,7 +140,7 @@ test(`It should support filtering nodes using a single filter.`, async (assert) 
 			} else if (operator === ">") {
 				expected = keys.filter((k) => k % 2 === 1 && k > key);
 			}
-			assert.array.equal(observed, expected, `Expected ${observed} for operator "${operator}" and key ${key} to be ${expected}!`);
+			assert.array.equals(observed, expected, `Expected ${observed} for operator "${operator}" and key ${key} to be ${expected}!`);
 		}
 	}
 });
@@ -550,7 +550,7 @@ test(`It should support for-of iteration.`, async (assert) => {
 		observed.push(entry.key);
 	}
 	let expected = [1, 2];
-	assert.array.equal(observed, expected);
+	assert.array.equals(observed, expected);
 });
 
 test(`It should support removing all nodes stored in the tree.`, async (assert) => {
@@ -568,7 +568,7 @@ test(`It should support filtering.`, async (assert) => {
 	tree.insert(2, null);
 	let observed = Array.from(tree.filter()).map((entry) => entry.key);
 	let expected = [1, 2];
-	assert.array.equal(observed, expected);
+	assert.array.equals(observed, expected);
 });
 
 test(`It should support insertions, lookups and removals.`, async (assert) => {
