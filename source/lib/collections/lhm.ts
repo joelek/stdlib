@@ -1,21 +1,21 @@
 import { DoublyLinkedList, DoublyLinkedListNode } from "./dll";
 import { RobinHoodHash } from "./rhh";
 
-export type OrderedMapEntry<A> = {
+export type LinkedHashMapEntry<A> = {
 	key: number;
 	value: A;
 };
 
-export class OrderedMap<A> implements Iterable<OrderedMapEntry<A>> {
-	private list: DoublyLinkedList<OrderedMapEntry<A>>;
-	private hash: RobinHoodHash<DoublyLinkedListNode<OrderedMapEntry<A>>>;
+export class LinkedHashMap<A> implements Iterable<LinkedHashMapEntry<A>> {
+	private list: DoublyLinkedList<LinkedHashMapEntry<A>>;
+	private hash: RobinHoodHash<DoublyLinkedListNode<LinkedHashMapEntry<A>>>;
 
 	constructor() {
-		this.list = new DoublyLinkedList<OrderedMapEntry<A>>();
-		this.hash = new RobinHoodHash<DoublyLinkedListNode<OrderedMapEntry<A>>>();
+		this.list = new DoublyLinkedList<LinkedHashMapEntry<A>>();
+		this.hash = new RobinHoodHash<DoublyLinkedListNode<LinkedHashMapEntry<A>>>();
 	}
 
-	* [Symbol.iterator](): Iterator<OrderedMapEntry<A>> {
+	* [Symbol.iterator](): Iterator<LinkedHashMapEntry<A>> {
 		yield * this.list;
 	}
 
@@ -55,7 +55,7 @@ export class OrderedMap<A> implements Iterable<OrderedMapEntry<A>> {
 	}
 
 	vacate(): void {
-		this.list = new DoublyLinkedList<OrderedMapEntry<A>>();
-		this.hash = new RobinHoodHash<DoublyLinkedListNode<OrderedMapEntry<A>>>();
+		this.list = new DoublyLinkedList<LinkedHashMapEntry<A>>();
+		this.hash = new RobinHoodHash<DoublyLinkedListNode<LinkedHashMapEntry<A>>>();
 	}
 };
