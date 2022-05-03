@@ -394,7 +394,7 @@ export class Tree<A> {
 	}
 
 	clear(): void {
-		this.root = undefined;
+		this.vacate();
 	}
 
 	* filter(...filters: Filter[]): Iterable<Entry<A>> {
@@ -442,5 +442,9 @@ export class Tree<A> {
 			this.root = this.root.remove(key);
 			this.root?.setParent(undefined);
 		}
+	}
+
+	vacate(): void {
+		this.root = undefined;
 	}
 };
