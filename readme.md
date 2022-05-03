@@ -6,6 +6,8 @@ TypeScript standard library.
 
 ### Collections
 
+#### AVL-Tree
+
 The AVL-Tree can be used to store key-value pairs. Values may be retrieved using the corresponding key in the same fashion as for a standard JavaScript Map.
 
 ```ts
@@ -31,6 +33,94 @@ for (let entry of tree.filter({ operator: ">", key: 0 }, { operator: "<", key: 2
 }
 console.log(tree.locate({ operator: ">", key: 1 })); // Outputs entry whose value is "world".
 ```
+
+Iteration is performed in key order. It is _not_ safe to mutate the tree during iteration.
+
+| Operation          | Worst    | Average  |
+| ------------------ | -------- | -------- |
+| filter(...filters) | O(log n) | O(log n) |
+| insert(key, value) | O(log n) | O(log n) |
+| length()           | O(n)     | O(n)     |
+| locate(filter)     | O(log n) | O(log n) |
+| lookup(key)        | O(log n) | O(log n) |
+| remove(key)        | O(log n) | O(log n) |
+| vacate()           | O(1)     | O(1)     |
+
+Please note that `length()` is lazily implemented and has terrible time complexity.
+
+#### Doubly Linked List
+
+The Doubly Linked List can be used to store sequences of values. Values may be retrieved from the start or end of the list.
+
+```ts
+import * as stdlib from "@joelek/ts-stdlib";
+
+let list = new stdlib.collections.dll.DoublyLinkedList<string>();
+list.prepend("hello");
+list.append("world");
+console.log(list.unprepend()); // Outputs entry whose value is "hello".
+console.log(map.unappend()); // Outputs entry whose value is "world".
+```
+
+Iteration is performed in sequence order. It is safe to mutate the list during iteration.
+
+| Operation      | Worst | Average |
+| -------------- | ----- | ------- |
+| append(value)  | O(1)  | O(1)    |
+| prepend(value) | O(1)  | O(1)    |
+| remove(node)   | O(1)  | O(1)    |
+| unappend()     | O(1)  | O(1)    |
+| unprepend()    | O(1)  | O(1)    |
+
+#### Linked Hash Map
+
+The Linked Hash Map can be used to store key-value pairs. Values may be retrieved using the corresponding key in the same fashion as for a standard JavaScript Map.
+
+```ts
+import * as stdlib from "@joelek/ts-stdlib";
+
+let map = new stdlib.collections.lhm.LinkedHashMap<string>();
+map.insert(1, "hello");
+map.insert(2, "world");
+console.log(map.lookup(1)); // Outputs entry whose value is "hello".
+console.log(map.lookup(2)); // Outputs entry whose value is "world".
+```
+
+Iteration is performed in insertion order. It is safe to mutate the map during iteration.
+
+| Operation          | Worst | Average |
+| ------------------ | ----- | ------- |
+| insert(key, value) | O(n)  | O(1)    |
+| length()           | O(1)  | O(1)    |
+| lookup(key)        | O(1)  | O(1)    |
+| remove(key)        | O(n)  | O(1)    |
+| vacate()           | O(1)  | O(1)    |
+
+The Linked Hash Map supports FIFO operations in amortized constant time. This in constrast to standard JavaScript Maps in notable JavaScript engines such as V8 which only supports FIFO operations in quadratic (!) time. This is due to the implementation of the underlying compact dictionary used by V8.
+
+#### Robin Hood Hash
+
+The Robin Hood Hash can be used to store key-value pairs. Values may be retrieved using the corresponding key in the same fashion as for a standard JavaScript Map.
+
+```ts
+import * as stdlib from "@joelek/ts-stdlib";
+
+let map = new stdlib.collections.rhh.RobinHoodHash<string>();
+map.insert(1, "hello");
+map.insert(2, "world");
+console.log(map.lookup(1)); // Outputs entry whose value is "hello".
+console.log(map.lookup(2)); // Outputs entry whose value is "world".
+```
+
+Iteration is performed in no discernible order. It is _not_ safe to mutate the map during iteration.
+
+| Operation          | Worst | Average |
+| ------------------ | ----- | ------- |
+| insert(key, value) | O(n)  | O(1)    |
+| length()           | O(1)  | O(1)    |
+| lookup(key)        | O(1)  | O(1)    |
+| remove(key)        | O(n)  | O(1)    |
+| vacate()           | O(1)  | O(1)    |
 
 ### Routing
 
