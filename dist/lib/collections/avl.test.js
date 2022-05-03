@@ -17,7 +17,7 @@ const Assert = {
         }
     },
     array: {
-        equal(one, two, message = "") {
+        equals(one, two, message = "") {
             if (one.length !== two.length) {
                 throw message;
             }
@@ -84,7 +84,7 @@ test(`It should support filtering nodes without using a filter.`, (assert) => __
     n1.setUpper(n2);
     let observed = Array.from(n3.filter()).map((entry) => entry.key);
     let expected = [1, 2, 3, 4, 5];
-    assert.array.equal(observed, expected);
+    assert.array.equals(observed, expected);
 }));
 test(`It should support filtering nodes using a ">" filter and a "<" filter.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
     let n1 = new avl.Node(1, null);
@@ -99,7 +99,7 @@ test(`It should support filtering nodes using a ">" filter and a "<" filter.`, (
     let observed = Array.from(n3.filter({ operator: ">", key: 1 }, { operator: "<", key: 5 }))
         .map((entry) => entry.key);
     let expected = [2, 3, 4];
-    assert.array.equal(observed, expected);
+    assert.array.equals(observed, expected);
 }));
 test(`It should locate maximum nodes.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
     let n1 = new avl.Node(1, null);
@@ -148,7 +148,7 @@ test(`It should support filtering nodes using a single filter.`, (assert) => __a
             else if (operator === ">") {
                 expected = keys.filter((k) => k % 2 === 1 && k > key);
             }
-            assert.array.equal(observed, expected, `Expected ${observed} for operator "${operator}" and key ${key} to be ${expected}!`);
+            assert.array.equals(observed, expected, `Expected ${observed} for operator "${operator}" and key ${key} to be ${expected}!`);
         }
     }
 }));
@@ -387,11 +387,11 @@ test(`It should support removing nodes with one upper child.`, (assert) => __awa
     assert.true(n3.getLower() === n2);
 }));
 test(`It should support removing nodes with two children through substitution.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
-    let n1 = new avl.Node(1, null, 2);
-    let n2 = new avl.Node(2, null, 1);
-    let n3 = new avl.Node(3, null, 3);
-    let n4 = new avl.Node(4, null, 2);
-    let n5 = new avl.Node(5, null, 1);
+    let n1 = new avl.Node(1, 1, 2);
+    let n2 = new avl.Node(2, 2, 1);
+    let n3 = new avl.Node(3, 3, 3);
+    let n4 = new avl.Node(4, 4, 2);
+    let n5 = new avl.Node(5, 5, 1);
     n1.setUpper(n2);
     n3.setLower(n1);
     n3.setUpper(n5);
@@ -399,6 +399,7 @@ test(`It should support removing nodes with two children through substitution.`,
     let result = n3.remove(3);
     assert.true(result === n3);
     assert.true((result === null || result === void 0 ? void 0 : result.entry().key) === 4);
+    assert.true((result === null || result === void 0 ? void 0 : result.entry().value) === 4);
     assert.true(n3.getLower() === n1);
     assert.true(n3.getUpper() === n5);
 }));
@@ -543,7 +544,7 @@ test(`It should support for-of iteration.`, (assert) => __awaiter(void 0, void 0
         observed.push(entry.key);
     }
     let expected = [1, 2];
-    assert.array.equal(observed, expected);
+    assert.array.equals(observed, expected);
 }));
 test(`It should support removing all nodes stored in the tree.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
     let tree = new avl.Tree();
@@ -559,7 +560,7 @@ test(`It should support filtering.`, (assert) => __awaiter(void 0, void 0, void 
     tree.insert(2, null);
     let observed = Array.from(tree.filter()).map((entry) => entry.key);
     let expected = [1, 2];
-    assert.array.equal(observed, expected);
+    assert.array.equals(observed, expected);
 }));
 test(`It should support insertions, lookups and removals.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
     let tree = new avl.Tree();

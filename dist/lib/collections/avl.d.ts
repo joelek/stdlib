@@ -52,4 +52,5 @@ export declare class Tree<A> {
     locate(filter: Filter): Entry<A> | undefined;
     lookup(key: number): A | undefined;
     remove(key: number): void;
+    vacate(): void;
 }

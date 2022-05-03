@@ -377,7 +377,7 @@ class Tree {
         yield* this.filter();
     }
     clear() {
-        this.root = undefined;
+        this.vacate();
     }
     *filter(...filters) {
         if (this.root == null) {
@@ -424,6 +424,9 @@ class Tree {
             this.root = this.root.remove(key);
             (_a = this.root) === null || _a === void 0 ? void 0 : _a.setParent(undefined);
         }
+    }
+    vacate() {
+        this.root = undefined;
     }
 }
 exports.Tree = Tree;
