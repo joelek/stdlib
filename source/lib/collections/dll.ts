@@ -1,4 +1,4 @@
-export class DoublyLinkedListNode<A>  {
+export class DoublyLinkedListNode<A> {
 	private value: A;
 	private last?: DoublyLinkedListNode<A>;
 	private next?: DoublyLinkedListNode<A>;
