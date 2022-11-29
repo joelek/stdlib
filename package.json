@@ -2,7 +2,7 @@
 	"bin": {},
 	"devDependencies": {
 		"@joelek/wtf": "github:joelek/wtf#semver:^1.0",
-		"typescript": "^4.4"
+		"typescript": "^4.0"
 	},
 	"license": "MIT",
 	"main": "./dist/lib/index.js",
