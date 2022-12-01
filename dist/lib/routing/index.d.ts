@@ -1,11 +1,11 @@
-export declare type Message = any;
-export declare type MessageObserver<A extends Message> = {
+export type Message = any;
+export type MessageObserver<A extends Message> = {
     (message: A): void;
 };
-export declare type MessageMap<A extends MessageMap<A>> = {
+export type MessageMap<A extends MessageMap<A>> = {
     [B in keyof A]: Message;
 };
-export declare type MessageObserverMap<A extends MessageMap<A>> = {
+export type MessageObserverMap<A extends MessageMap<A>> = {
     [B in keyof A]: Set<MessageObserver<A[B]>>;
 };
 export declare class MessageRouter<A extends MessageMap<A>> {
@@ -16,10 +16,10 @@ export declare class MessageRouter<A extends MessageMap<A>> {
     route<B extends keyof A>(type: B, message: A[B]): void;
     size(): number;
 }
-export declare type NamespacedMessageMap<A extends NamespacedMessageMap<A>> = {
+export type NamespacedMessageMap<A extends NamespacedMessageMap<A>> = {
     [B in keyof A]: MessageMap<A[B]>;
 };
-export declare type MessageRouterMap<A extends NamespacedMessageMap<A>> = {
+export type MessageRouterMap<A extends NamespacedMessageMap<A>> = {
     [B in keyof A]: MessageRouter<A[B]>;
 };
 export declare class NamespacedMessageRouter<A extends NamespacedMessageMap<A>> {

@@ -1,4 +1,4 @@
-export declare type RobinHoodHashEntry<A> = {
+export type RobinHoodHashEntry<A> = {
     key: number;
     value: A;
 };

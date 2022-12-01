@@ -1,4 +1,4 @@
-export declare type LinkedHashMapEntry<A> = {
+export type LinkedHashMapEntry<A> = {
     key: number;
     value: A;
 };

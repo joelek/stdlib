@@ -1,9 +1,9 @@
-export declare type Entry<A> = {
+export type Entry<A> = {
     key: number;
     value: A;
 };
-export declare type Operator = "<" | "<=" | "=" | ">=" | ">";
-export declare type Filter = {
+export type Operator = "<" | "<=" | "=" | ">=" | ">";
+export type Filter = {
     operator: Operator;
     key: number;
 };
