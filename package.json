@@ -12,7 +12,7 @@
 		"url": "https://github.com/joelek/ts-stdlib.git"
 	},
 	"scripts": {
-		"appgen": "node -p \"JSON.stringify((({ name, version }) => ({ name, version }))(require('./package.json')), null, '\t')\" > ./source/app.json",
+		"appgen": "node -p \"JSON.stringify((({ name, version }) => ({ name, version }))(require('./package.json')), null, '\t').split(/\\r?\\n/).join(require('os').EOL)\" > ./source/app.json",
 		"build": "npm run appgen && npm run compile && npm run package && npm run test",
 		"clean": "rm -rf ./build/ ./node_modules/",
 		"compile": "rm -rf ./build/* && npx tsc --build",
