@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Parser = void 0;
 const integer_1 = require("../asserts/integer");
+const chunk_1 = require("./chunk");
 class Parser {
     constructor(buffer, offset) {
         this.buffer = buffer;
@@ -26,6 +27,26 @@ class Parser {
             value -= bias + bias;
         }
         return value;
+    }
+    string(encoding, length) {
+        if (length != null) {
+            let chunk = this.chunk(length);
+            return chunk_1.Chunk.toString(chunk, encoding);
+        }
+        let bytes = [];
+        while (!this.eof()) {
+            if (this.offset > this.buffer.length) {
+                throw new Error(`Expected to read at least 1 byte!`);
+            }
+            let byte = this.buffer[this.offset];
+            this.offset += 1;
+            if (byte === 0) {
+                break;
+            }
+            bytes.push(byte);
+        }
+        let chunk = Uint8Array.from(bytes);
+        return chunk_1.Chunk.toString(chunk, encoding);
     }
     try(supplier) {
         let offset = this.offset;
