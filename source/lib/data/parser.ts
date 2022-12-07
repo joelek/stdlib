@@ -1,4 +1,5 @@
 import { IntegerAssert } from "../asserts/integer";
+import { Chunk } from "./chunk";
 
 export class Parser {
 	private buffer: Uint8Array;
@@ -30,6 +31,27 @@ export class Parser {
 			value -= bias + bias;
 		}
 		return value;
+	}
+
+	string(encoding: "base64" | "base64url" | "binary" | "hex" | "utf-8", length?: number): string {
+		if (length != null) {
+			let chunk = this.chunk(length);
+			return Chunk.toString(chunk, encoding);
+		}
+		let bytes = [] as Array<number>;
+		while (!this.eof()) {
+			if (this.offset > this.buffer.length) {
+				throw new Error(`Expected to read at least 1 byte!`);
+			}
+			let byte = this.buffer[this.offset];
+			this.offset += 1;
+			if (byte === 0) {
+				break;
+			}
+			bytes.push(byte);
+		}
+		let chunk = Uint8Array.from(bytes);
+		return Chunk.toString(chunk, encoding);
 	}
 
 	try<A>(supplier: (parser: Parser) => A): A {

@@ -84,3 +84,24 @@ wtf.test(`It should parse unsigned 6-byte little endian properly.`, async (asser
 	let expected = 0x060504030201;
 	assert.equals(observed, expected);
 });
+
+wtf.test(`It should parse fixed-width strings properly.`, async (assert) => {
+	let parser = new Parser(Uint8Array.of(0x30, 0x31, 0x32, 0x33));
+	let observed = parser.string("utf-8", 4);
+	let expected = "0123";
+	assert.equals(observed, expected);
+});
+
+wtf.test(`It should parse strings properly.`, async (assert) => {
+	let parser = new Parser(Uint8Array.of(0x30, 0x31, 0x32, 0x33));
+	let observed = parser.string("utf-8");
+	let expected = "0123";
+	assert.equals(observed, expected);
+});
+
+wtf.test(`It should parse zero-terminated strings properly.`, async (assert) => {
+	let parser = new Parser(Uint8Array.of(0x30, 0x31, 0x32, 0x33, 0x00));
+	let observed = parser.string("utf-8");
+	let expected = "0123";
+	assert.equals(observed, expected);
+});
