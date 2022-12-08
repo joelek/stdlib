@@ -20,6 +20,12 @@ class Parser {
     eof() {
         return this.offset >= this.buffer.length;
     }
+    seek(offset) {
+        if (offset > this.buffer.length) {
+            throw new Error(`Expected a valid offset!`);
+        }
+        this.offset = offset;
+    }
     signed(length, endian) {
         let value = this.unsigned(length, endian);
         let bias = Math.pow(2, (length * 8 - 1));
