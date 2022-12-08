@@ -24,6 +24,13 @@ export class Parser {
 		return this.offset >= this.buffer.length;
 	}
 
+	seek(offset: number): void {
+		if (offset > this.buffer.length) {
+			throw new Error(`Expected a valid offset!`);
+		}
+		this.offset = offset;
+	}
+
 	signed(length: number, endian?: "big" | "little"): number {
 		let value = this.unsigned(length, endian);
 		let bias = 2 ** (length * 8 - 1);
