@@ -218,3 +218,4 @@ NB: This project targets TypeScript 4 in strict mode.
 ## Roadmap
 
 * Prevent AVL-tree from being mutated while iterating.
+* Document data module.
