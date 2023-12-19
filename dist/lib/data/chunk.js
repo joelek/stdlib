@@ -7,8 +7,8 @@ class Chunk {
         if (encoding === "binary") {
             let bytes = new Array();
             for (let i = 0; i < string.length; i += 1) {
-                let byte = string.charCodeAt(i);
-                bytes.push(byte);
+                let code_unit = string.charCodeAt(i);
+                bytes.push(code_unit);
             }
             return Uint8Array.from(bytes);
         }
@@ -28,6 +28,16 @@ class Chunk {
                 let part = string.slice(i, i + 2);
                 let byte = Number.parseInt(part, 16);
                 bytes.push(byte);
+            }
+            return Uint8Array.from(bytes);
+        }
+        if (encoding === "utf16be") {
+            let bytes = new Array();
+            for (let i = 0; i < string.length; i++) {
+                let code_unit = string.charCodeAt(i);
+                let hi = (code_unit >> 8) & 0xFF;
+                let lo = (code_unit >> 0) & 0xFF;
+                bytes.push(hi, lo);
             }
             return Uint8Array.from(bytes);
         }
@@ -55,6 +65,16 @@ class Chunk {
             for (let byte of chunk) {
                 let part = byte.toString(16).toUpperCase().padStart(2, "0");
                 parts.push(part);
+            }
+            return parts.join("");
+        }
+        if (encoding === "utf16be") {
+            let parts = new Array();
+            for (let i = 0; i < chunk.length; i += 2) {
+                let hi = chunk[i + 0] || 0;
+                let lo = chunk[i + 1] || 0;
+                let code_unit = (hi << 8) | lo;
+                parts.push(String.fromCharCode(code_unit));
             }
             return parts.join("");
         }
