@@ -49,6 +49,30 @@ wtf.test(`It should convert strings to chunks "hex" properly.`, async (assert) =
 	assert.equals(observed, expected);
 });
 
+wtf.test(`It should convert chunks to strings "utf16be" properly ("π").`, async (assert) => {
+	let observed = Chunk.toString(Uint8Array.of(0x03, 0xC0), "utf16be");
+	let expected = "\u{3C0}";
+	assert.equals(observed, expected);
+});
+
+wtf.test(`It should convert strings to chunks "utf16be" properly ("π").`, async (assert) => {
+	let observed = Chunk.fromString("\u{3C0}", "utf16be");
+	let expected = Uint8Array.of(0x03, 0xC0);
+	assert.equals(observed, expected);
+});
+
+wtf.test(`It should convert chunks to strings "utf16be" properly ("🚀").`, async (assert) => {
+	let observed = Chunk.toString(Uint8Array.of(0xD8, 0x3D, 0xDE, 0x80), "utf16be");
+	let expected = "\u{1F680}";
+	assert.equals(observed, expected);
+});
+
+wtf.test(`It should convert strings to chunks "utf16be" properly ("🚀").`, async (assert) => {
+	let observed = Chunk.fromString("\u{1F680}", "utf16be");
+	let expected = Uint8Array.of(0xD8, 0x3D, 0xDE, 0x80);
+	assert.equals(observed, expected);
+});
+
 wtf.test(`It should convert chunks to strings "utf-8" properly.`, async (assert) => {
 	let observed = Chunk.toString(Uint8Array.of(0xF0, 0x9F, 0x9A, 0x80), "utf-8");
 	let expected = "\u{1F680}";
