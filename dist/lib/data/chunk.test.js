@@ -71,6 +71,26 @@ wtf.test(`It should convert strings to chunks "utf16be" properly ("🚀").`, (as
     let expected = Uint8Array.of(0xD8, 0x3D, 0xDE, 0x80);
     assert.equals(observed, expected);
 }));
+wtf.test(`It should convert chunks to strings "utf16le" properly ("π").`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+    let observed = chunk_1.Chunk.toString(Uint8Array.of(0xC0, 0x03), "utf16le");
+    let expected = "\u{3C0}";
+    assert.equals(observed, expected);
+}));
+wtf.test(`It should convert strings to chunks "utf16le" properly ("π").`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+    let observed = chunk_1.Chunk.fromString("\u{3C0}", "utf16le");
+    let expected = Uint8Array.of(0xC0, 0x03);
+    assert.equals(observed, expected);
+}));
+wtf.test(`It should convert chunks to strings "utf16le" properly ("🚀").`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+    let observed = chunk_1.Chunk.toString(Uint8Array.of(0x3D, 0xD8, 0x80, 0xDE), "utf16le");
+    let expected = "\u{1F680}";
+    assert.equals(observed, expected);
+}));
+wtf.test(`It should convert strings to chunks "utf16le" properly ("🚀").`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+    let observed = chunk_1.Chunk.fromString("\u{1F680}", "utf16le");
+    let expected = Uint8Array.of(0x3D, 0xD8, 0x80, 0xDE);
+    assert.equals(observed, expected);
+}));
 wtf.test(`It should convert chunks to strings "utf-8" properly.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
     let observed = chunk_1.Chunk.toString(Uint8Array.of(0xF0, 0x9F, 0x9A, 0x80), "utf-8");
     let expected = "\u{1F680}";

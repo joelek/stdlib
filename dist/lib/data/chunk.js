@@ -41,6 +41,16 @@ class Chunk {
             }
             return Uint8Array.from(bytes);
         }
+        if (encoding === "utf16le") {
+            let bytes = new Array();
+            for (let i = 0; i < string.length; i++) {
+                let code_unit = string.charCodeAt(i);
+                let lo = (code_unit >> 8) & 0xFF;
+                let hi = (code_unit >> 0) & 0xFF;
+                bytes.push(hi, lo);
+            }
+            return Uint8Array.from(bytes);
+        }
         // @ts-ignore
         return new TextEncoder().encode(string);
     }
@@ -73,6 +83,16 @@ class Chunk {
             for (let i = 0; i < chunk.length; i += 2) {
                 let hi = chunk[i + 0] || 0;
                 let lo = chunk[i + 1] || 0;
+                let code_unit = (hi << 8) | lo;
+                parts.push(String.fromCharCode(code_unit));
+            }
+            return parts.join("");
+        }
+        if (encoding === "utf16le") {
+            let parts = new Array();
+            for (let i = 0; i < chunk.length; i += 2) {
+                let lo = chunk[i + 0] || 0;
+                let hi = chunk[i + 1] || 0;
                 let code_unit = (hi << 8) | lo;
                 parts.push(String.fromCharCode(code_unit));
             }
