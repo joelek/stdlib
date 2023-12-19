@@ -1,7 +1,7 @@
 export class Chunk {
 	private constructor() {}
 
-	static fromString(string: string, encoding: "base64" | "base64url" | "binary" | "hex" | "utf16be" | "utf-8"): Uint8Array {
+	static fromString(string: string, encoding: "base64" | "base64url" | "binary" | "hex" | "utf16be" | "utf16le" | "utf-8"): Uint8Array {
 		if (encoding === "binary") {
 			let bytes = new Array<number>();
 			for (let i = 0; i < string.length; i += 1) {
@@ -39,11 +39,21 @@ export class Chunk {
 			}
 			return Uint8Array.from(bytes);
 		}
+		if (encoding === "utf16le") {
+			let bytes = new Array<number>();
+			for (let i = 0; i < string.length; i++) {
+				let code_unit = string.charCodeAt(i);
+				let lo = (code_unit >> 8) & 0xFF;
+				let hi = (code_unit >> 0) & 0xFF;
+				bytes.push(hi, lo);
+			}
+			return Uint8Array.from(bytes);
+		}
 		// @ts-ignore
 		return new TextEncoder().encode(string);
 	}
 
-	static toString(chunk: Uint8Array, encoding: "base64" | "base64url" | "binary" | "hex" | "utf16be" | "utf-8"): string {
+	static toString(chunk: Uint8Array, encoding: "base64" | "base64url" | "binary" | "hex" | "utf16be" | "utf16le" | "utf-8"): string {
 		if (encoding === "binary") {
 			let parts = new Array<string>();
 			for (let byte of chunk) {
@@ -72,6 +82,16 @@ export class Chunk {
 			for (let i = 0; i < chunk.length; i += 2) {
 				let hi = chunk[i + 0] || 0;
 				let lo = chunk[i + 1] || 0;
+				let code_unit = (hi << 8) | lo;
+				parts.push(String.fromCharCode(code_unit));
+			}
+			return parts.join("");
+		}
+		if (encoding === "utf16le") {
+			let parts = new Array<string>();
+			for (let i = 0; i < chunk.length; i += 2) {
+				let lo = chunk[i + 0] || 0;
+				let hi = chunk[i + 1] || 0;
 				let code_unit = (hi << 8) | lo;
 				parts.push(String.fromCharCode(code_unit));
 			}
