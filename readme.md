@@ -4,6 +4,21 @@ TypeScript standard library.
 
 ## Features
 
+### Codepages
+
+The Codepage class can be used to convert strings to and from single-byte codepages.
+
+```ts
+import * as stdlib from "@joelek/ts-stdlib";
+
+let codepage = new stdlib.codepages.codepage.Codepage([
+	"🚀".codePointAt(0) as number,
+	"🍕".codePointAt(0) as number
+]);
+let string = codepage.decode(Uint8Array.from([0, 1])); // String will contain "🚀🍕".
+let buffer = codepage.encode(string); // Buffer will contain [0, 1].
+```
+
 ### Collections
 
 #### AVL-Tree
