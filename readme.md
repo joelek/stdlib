@@ -1,4 +1,4 @@
-# @joelek/ts-stdlib
+# @joelek/stdlib
 
 TypeScript standard library.
 
@@ -9,7 +9,7 @@ TypeScript standard library.
 The Codepage class can be used to convert strings to and from single-byte codepages.
 
 ```ts
-import * as stdlib from "@joelek/ts-stdlib";
+import * as stdlib from "@joelek/stdlib";
 
 let codepage = new stdlib.codepages.codepage.Codepage([
 	"🚀".codePointAt(0) as number,
@@ -26,7 +26,7 @@ let buffer = codepage.encode(string); // Buffer will contain [0, 1].
 The AVL-Tree can be used to store key-value pairs. Values may be retrieved using the corresponding key in the same fashion as for a standard JavaScript Map.
 
 ```ts
-import * as stdlib from "@joelek/ts-stdlib";
+import * as stdlib from "@joelek/stdlib";
 
 let tree = new stdlib.collections.avl.Tree<string>();
 tree.insert(1, "hello");
@@ -38,7 +38,7 @@ console.log(tree.lookup(2)); // Outputs entry whose value is "world".
 The AVL-Tree adds filtering functionality that may be used to retrieve all entries whose keys match the supplied filters. The tree supports the `<`, `<=`, `=`, `>=` and `>` filters.
 
 ```ts
-import * as stdlib from "@joelek/ts-stdlib";
+import * as stdlib from "@joelek/stdlib";
 
 let tree = new stdlib.collections.avl.Tree<string>();
 tree.insert(1, "hello");
@@ -68,7 +68,7 @@ Please note that `length()` is lazily implemented and has terrible time complexi
 The Doubly Linked List can be used to store sequences of values. Values may be retrieved from the start or end of the list.
 
 ```ts
-import * as stdlib from "@joelek/ts-stdlib";
+import * as stdlib from "@joelek/stdlib";
 
 let list = new stdlib.collections.dll.DoublyLinkedList<string>();
 list.prepend("hello");
@@ -92,7 +92,7 @@ Iteration is performed in sequence order. It is safe to mutate the list during i
 The Linked Hash Map can be used to store key-value pairs. Values may be retrieved using the corresponding key in the same fashion as for a standard JavaScript Map.
 
 ```ts
-import * as stdlib from "@joelek/ts-stdlib";
+import * as stdlib from "@joelek/stdlib";
 
 let map = new stdlib.collections.lhm.LinkedHashMap<string>();
 map.insert(1, "hello");
@@ -118,7 +118,7 @@ The Linked Hash Map supports FIFO operations in amortized constant time. This in
 The Robin Hood Hash can be used to store key-value pairs. Values may be retrieved using the corresponding key in the same fashion as for a standard JavaScript Map.
 
 ```ts
-import * as stdlib from "@joelek/ts-stdlib";
+import * as stdlib from "@joelek/stdlib";
 
 let map = new stdlib.collections.rhh.RobinHoodHash<string>();
 map.insert(1, "hello");
@@ -142,7 +142,7 @@ Iteration is performed in no discernible order. It is _not_ safe to mutate the m
 The message router can be used to route messages between senders and observers.
 
 ```ts
-import * as stdlib from "@joelek/ts-stdlib";
+import * as stdlib from "@joelek/stdlib";
 
 type MyMessageMap = {
 	"MyMessage": {
@@ -163,7 +163,7 @@ router.route("MyMessage", {
 The namespaced message router can be used to group messages into distinct namespaces.
 
 ```ts
-import * as stdlib from "@joelek/ts-stdlib";
+import * as stdlib from "@joelek/stdlib";
 
 type MyNamespacedMessageMap = {
 	"UserMessages": {
@@ -204,13 +204,13 @@ Ethereum contributions can be made to address `0xf1B63d95BEfEdAf70B3623B1A4Ba0D9
 Releases follow semantic versioning and release packages are published using the GitHub platform. Use the following command to install the latest release.
 
 ```
-npm install joelek/ts-stdlib#semver:^1.5
+npm install joelek/stdlib#semver:^1.5
 ```
 
 Use the following command to install the very latest build. The very latest build may include breaking changes and should not be used in production environments.
 
 ```
-npm install joelek/ts-stdlib#master
+npm install joelek/stdlib#master
 ```
 
 NB: This project targets TypeScript 4 in strict mode.
