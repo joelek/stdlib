@@ -1,24 +1,56 @@
-export type Entry<A> = {
-	key: number;
+export type Key = string | number | boolean | undefined | null | bigint;
+
+export type GenericEntry<A, B extends Key> = {
+	key: B;
 	value: A;
 };
 
+export type Entry<A> = GenericEntry<A, number>;
+
 export type Operator = "<" | "<=" | "=" | ">=" | ">";
 
-export type Filter = {
+export type GenericFilter<A extends Key> = {
 	operator: Operator;
-	key: number;
+	key: A;
 };
 
-export class Node<A> {
-	private key: number;
+export type Filter = GenericFilter<number>;
+
+export type CollatorResult = "ONE_COMES_FIRST" | "IDENTICAL" | "TWO_COMES_FIRST";
+
+export type Collator<A> = (one: A, two: A) => CollatorResult;
+
+export const COLLATOR: Collator<Key> = (one, two) => {
+	if (one == null) {
+		if (two == null) {
+			return "IDENTICAL";
+		} else {
+			return "ONE_COMES_FIRST";
+		}
+	} else {
+		if (two == null) {
+			return "TWO_COMES_FIRST";
+		} else {
+			if (one < two) {
+				return "ONE_COMES_FIRST";
+			}
+			if (two < one) {
+				return "TWO_COMES_FIRST";
+			}
+			return "IDENTICAL";
+		}
+	}
+};
+
+export class GenericNode<A, B extends Key> {
+	private key: B;
 	private value: A;
 	private height: number;
-	private parent: Node<A> | undefined;
-	private lower: Node<A> | undefined;
-	private upper: Node<A> | undefined;
+	private parent: GenericNode<A, B> | undefined;
+	private lower: GenericNode<A, B> | undefined;
+	private upper: GenericNode<A, B> | undefined;
 
-	constructor(key: number, value: A, height?: number) {
+	constructor(key: B, value: A, height?: number) {
 		this.key = key;
 		this.value = value;
 		this.height = height ?? 1;
@@ -27,47 +59,48 @@ export class Node<A> {
 		this.upper = undefined;
 	}
 
-	compare(filter: Filter): number {
+	compare(filter: GenericFilter<B>): number {
+		let position = COLLATOR(this.key, filter.key);
 		if (filter.operator === "<") {
-			if (this.key > filter.key) {
+			if (position === "TWO_COMES_FIRST") {
 				return -1;
-			} else if (this.key < filter.key) {
+			} else if (position === "ONE_COMES_FIRST") {
 				return 0;
 			} else {
 				return -1;
 			}
 		}
 		if (filter.operator === "<=") {
-			if (this.key > filter.key) {
+			if (position === "TWO_COMES_FIRST") {
 				return -1;
-			} else if (this.key < filter.key) {
+			} else if (position === "ONE_COMES_FIRST") {
 				return 0;
 			} else {
 				return 0;
 			}
 		}
 		if (filter.operator === "=") {
-			if (this.key > filter.key) {
+			if (position === "TWO_COMES_FIRST") {
 				return -1;
-			} else if (this.key < filter.key) {
+			} else if (position === "ONE_COMES_FIRST") {
 				return 1;
 			} else {
 				return 0;
 			}
 		}
 		if (filter.operator === ">=") {
-			if (this.key > filter.key) {
+			if (position === "TWO_COMES_FIRST") {
 				return 0;
-			} else if (this.key < filter.key) {
+			} else if (position === "ONE_COMES_FIRST") {
 				return 1;
 			} else {
 				return 0;
 			}
 		}
 		if (filter.operator === ">") {
-			if (this.key > filter.key) {
+			if (position === "TWO_COMES_FIRST") {
 				return 0;
-			} else if (this.key < filter.key) {
+			} else if (position === "ONE_COMES_FIRST") {
 				return 1;
 			} else {
 				return 1;
@@ -84,14 +117,14 @@ export class Node<A> {
 		return Math.max((this.lower?.height ?? 0), (this.upper?.height ?? 0)) + 1;
 	}
 
-	entry(): Entry<A> {
+	entry(): GenericEntry<A, B> {
 		return {
 			key: this.key,
 			value: this.value
 		};
 	}
 
-	* filter(...filters: Array<Filter>): Iterable<Entry<A>> {
+	* filter(...filters: Array<GenericFilter<B>>): Iterable<GenericEntry<A, B>> {
 		let lower = true;
 		let current = true;
 		let upper = true;
@@ -112,25 +145,25 @@ export class Node<A> {
 		}
 	}
 
-	getMaximum(): Node<A> {
-		let node = this as Node<A>;
+	getMaximum(): GenericNode<A, B> {
+		let node = this as GenericNode<A, B>;
 		while (node.upper != null) {
 			node = node.upper;
 		}
 		return node;
 	}
 
-	getMinimum(): Node<A> {
-		let node = this as Node<A>;
+	getMinimum(): GenericNode<A, B> {
+		let node = this as GenericNode<A, B>;
 		while (node.lower != null) {
 			node = node.lower;
 		}
 		return node;
 	}
 
-	getLowerParent(): Node<A> | undefined {
+	getLowerParent(): GenericNode<A, B> | undefined {
 		let parent = this.parent;
-		let child = this as Node<A>;
+		let child = this as GenericNode<A, B>;
 		while (parent != null && child === parent.lower) {
 			child = parent;
 			parent = parent.parent;
@@ -138,9 +171,9 @@ export class Node<A> {
 		return parent;
 	}
 
-	getUpperParent(): Node<A> | undefined {
+	getUpperParent(): GenericNode<A, B> | undefined {
 		let parent = this.parent;
-		let child = this as Node<A>;
+		let child = this as GenericNode<A, B>;
 		while (parent != null && child === parent.upper) {
 			child = parent;
 			parent = parent.parent;
@@ -148,26 +181,27 @@ export class Node<A> {
 		return parent;
 	}
 
-	getPredecessor(): Node<A> | undefined {
+	getPredecessor(): GenericNode<A, B> | undefined {
 		if (this.lower != null) {
 			return this.lower.getMaximum();
 		}
 		return this.getLowerParent();
 	}
 
-	getSuccessor(): Node<A> | undefined {
+	getSuccessor(): GenericNode<A, B> | undefined {
 		if (this.upper != null) {
 			return this.upper.getMinimum();
 		}
 		return this.getUpperParent();
 	}
 
-	insert(node: Node<A>): Node<A> {
-		if (node.key === this.key) {
+	insert(node: GenericNode<A, B>): GenericNode<A, B> {
+		let position = COLLATOR(node.key, this.key);
+		if (position === "IDENTICAL") {
 			this.value = node.value;
 			return this;
 		}
-		if (node.key < this.key) {
+		if (position === "ONE_COMES_FIRST") {
 			if (this.lower == null) {
 				this.setLower(node);
 			} else {
@@ -184,8 +218,9 @@ export class Node<A> {
 		return this.rebalance();
 	}
 
-	locate(filter: Filter): Node<A> | undefined {
-		if (filter.key === this.key) {
+	locate(filter: GenericFilter<B>): GenericNode<A, B> | undefined {
+		let position = COLLATOR(filter.key, this.key);
+		if (position === "IDENTICAL") {
 			if (filter.operator === "<") {
 				return this.getPredecessor();
 			}
@@ -202,7 +237,7 @@ export class Node<A> {
 				return this.getSuccessor();
 			}
 		}
-		if (filter.key < this.key) {
+		if (position === "ONE_COMES_FIRST") {
 			if (this.lower != null) {
 				return this.lower.locate(filter);
 			} else {
@@ -239,7 +274,7 @@ export class Node<A> {
 		}
 	}
 
-	rebalance(): Node<A> {
+	rebalance(): GenericNode<A, B> {
 		let balance = this.computeBalance();
 		if (balance < -1) {
 			if (this.lower == null) {
@@ -268,8 +303,9 @@ export class Node<A> {
 		return this;
 	}
 
-	remove(key: number): Node<A> | undefined {
-		if (key === this.key) {
+	remove(key: B): GenericNode<A, B> | undefined {
+		let position = COLLATOR(key, this.key);
+		if (position === "IDENTICAL") {
 			if (this.lower != null) {
 				if (this.upper != null) {
 					let { key, value } = this.upper.getMinimum();
@@ -289,7 +325,7 @@ export class Node<A> {
 				}
 			}
 		}
-		if (key < this.key) {
+		if (position === "ONE_COMES_FIRST") {
 			if (this.lower != null) {
 				this.setLower(this.lower.remove(key));
 			} else {
@@ -306,7 +342,7 @@ export class Node<A> {
 		return this.rebalance();
 	}
 
-	rotateLeft(): Node<A> {
+	rotateLeft(): GenericNode<A, B> {
 		let upper = this.upper;
 		if (upper == null) {
 			throw `Expected upper child to be non-null!`;
@@ -318,7 +354,7 @@ export class Node<A> {
 		return upper;
 	}
 
-	rotateRight(): Node<A> {
+	rotateRight(): GenericNode<A, B> {
 		let lower = this.lower;
 		if (lower == null) {
 			throw `Expected lower child to be non-null!`;
@@ -338,11 +374,11 @@ export class Node<A> {
 		return this.height = height;
 	}
 
-	getParent(): Node<A> | undefined {
+	getParent(): GenericNode<A, B> | undefined {
 		return this.parent;
 	}
 
-	setParent(parent: Node<A> | undefined): void {
+	setParent(parent: GenericNode<A, B> | undefined): void {
 		if (this.parent != null) {
 			if (this.parent.lower === this) {
 				this.parent.lower = undefined;
@@ -353,11 +389,11 @@ export class Node<A> {
 		this.parent = parent;
 	}
 
-	getLower(): Node<A> | undefined {
+	getLower(): GenericNode<A, B> | undefined {
 		return this.lower;
 	}
 
-	setLower(lower: Node<A> | undefined): void {
+	setLower(lower: GenericNode<A, B> | undefined): void {
 		if (lower != null) {
 			lower.setParent(this);
 		}
@@ -367,11 +403,11 @@ export class Node<A> {
 		this.lower = lower;
 	}
 
-	getUpper(): Node<A> | undefined {
+	getUpper(): GenericNode<A, B> | undefined {
 		return this.upper;
 	}
 
-	setUpper(upper: Node<A> | undefined): void {
+	setUpper(upper: GenericNode<A, B> | undefined): void {
 		if (upper != null) {
 			upper.setParent(this);
 		}
@@ -382,14 +418,16 @@ export class Node<A> {
 	}
 };
 
-export class Tree<A> {
-	private root: Node<A> | undefined;
+export class Node<A> extends GenericNode<A, number> {};
+
+export class GenericTree<A, B extends Key> {
+	private root: GenericNode<A, B> | undefined;
 
 	constructor() {
 		this.root = undefined;
 	}
 
-	* [Symbol.iterator](): Iterator<Entry<A>> {
+	* [Symbol.iterator](): Iterator<GenericEntry<A, B>> {
 		yield * this.filter();
 	}
 
@@ -397,7 +435,7 @@ export class Tree<A> {
 		this.vacate();
 	}
 
-	* filter(...filters: Filter[]): Iterable<Entry<A>> {
+	* filter(...filters: GenericFilter<B>[]): Iterable<GenericEntry<A, B>> {
 		if (this.root == null) {
 			return;
 		}
@@ -409,8 +447,8 @@ export class Tree<A> {
 		}
 	}
 
-	insert(key: number, value: A): void {
-		let node = new Node<A>(key, value);
+	insert(key: B, value: A): void {
+		let node = new GenericNode<A, B>(key, value);
 		if (this.root != null) {
 			this.root = this.root.insert(node);
 			this.root?.setParent(undefined);
@@ -427,17 +465,17 @@ export class Tree<A> {
 		return length;
 	}
 
-	locate(filter: Filter): Entry<A> | undefined {
+	locate(filter: GenericFilter<B>): GenericEntry<A, B> | undefined {
 		if (this.root != null) {
 			return this.root.locate(filter)?.entry();
 		}
 	}
 
-	lookup(key: number): A | undefined {
+	lookup(key: B): A | undefined {
 		return this.locate({ operator: "=", key: key })?.value;
 	}
 
-	remove(key: number): void {
+	remove(key: B): void {
 		if (this.root != null) {
 			this.root = this.root.remove(key);
 			this.root?.setParent(undefined);
@@ -448,3 +486,5 @@ export class Tree<A> {
 		this.root = undefined;
 	}
 };
+
+export class Tree<A> extends GenericTree<A, number> {};
