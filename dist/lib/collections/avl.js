@@ -1,7 +1,32 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Tree = exports.Node = void 0;
-class Node {
+exports.Tree = exports.GenericTree = exports.Node = exports.GenericNode = exports.COLLATOR = void 0;
+const COLLATOR = (one, two) => {
+    if (one == null) {
+        if (two == null) {
+            return "IDENTICAL";
+        }
+        else {
+            return "ONE_COMES_FIRST";
+        }
+    }
+    else {
+        if (two == null) {
+            return "TWO_COMES_FIRST";
+        }
+        else {
+            if (one < two) {
+                return "ONE_COMES_FIRST";
+            }
+            if (two < one) {
+                return "TWO_COMES_FIRST";
+            }
+            return "IDENTICAL";
+        }
+    }
+};
+exports.COLLATOR = COLLATOR;
+class GenericNode {
     constructor(key, value, height) {
         this.key = key;
         this.value = value;
@@ -11,11 +36,12 @@ class Node {
         this.upper = undefined;
     }
     compare(filter) {
+        let position = (0, exports.COLLATOR)(this.key, filter.key);
         if (filter.operator === "<") {
-            if (this.key > filter.key) {
+            if (position === "TWO_COMES_FIRST") {
                 return -1;
             }
-            else if (this.key < filter.key) {
+            else if (position === "ONE_COMES_FIRST") {
                 return 0;
             }
             else {
@@ -23,10 +49,10 @@ class Node {
             }
         }
         if (filter.operator === "<=") {
-            if (this.key > filter.key) {
+            if (position === "TWO_COMES_FIRST") {
                 return -1;
             }
-            else if (this.key < filter.key) {
+            else if (position === "ONE_COMES_FIRST") {
                 return 0;
             }
             else {
@@ -34,10 +60,10 @@ class Node {
             }
         }
         if (filter.operator === "=") {
-            if (this.key > filter.key) {
+            if (position === "TWO_COMES_FIRST") {
                 return -1;
             }
-            else if (this.key < filter.key) {
+            else if (position === "ONE_COMES_FIRST") {
                 return 1;
             }
             else {
@@ -45,10 +71,10 @@ class Node {
             }
         }
         if (filter.operator === ">=") {
-            if (this.key > filter.key) {
+            if (position === "TWO_COMES_FIRST") {
                 return 0;
             }
-            else if (this.key < filter.key) {
+            else if (position === "ONE_COMES_FIRST") {
                 return 1;
             }
             else {
@@ -56,10 +82,10 @@ class Node {
             }
         }
         if (filter.operator === ">") {
-            if (this.key > filter.key) {
+            if (position === "TWO_COMES_FIRST") {
                 return 0;
             }
-            else if (this.key < filter.key) {
+            else if (position === "ONE_COMES_FIRST") {
                 return 1;
             }
             else {
@@ -147,11 +173,12 @@ class Node {
         return this.getUpperParent();
     }
     insert(node) {
-        if (node.key === this.key) {
+        let position = (0, exports.COLLATOR)(node.key, this.key);
+        if (position === "IDENTICAL") {
             this.value = node.value;
             return this;
         }
-        if (node.key < this.key) {
+        if (position === "ONE_COMES_FIRST") {
             if (this.lower == null) {
                 this.setLower(node);
             }
@@ -171,7 +198,8 @@ class Node {
         return this.rebalance();
     }
     locate(filter) {
-        if (filter.key === this.key) {
+        let position = (0, exports.COLLATOR)(filter.key, this.key);
+        if (position === "IDENTICAL") {
             if (filter.operator === "<") {
                 return this.getPredecessor();
             }
@@ -188,7 +216,7 @@ class Node {
                 return this.getSuccessor();
             }
         }
-        if (filter.key < this.key) {
+        if (position === "ONE_COMES_FIRST") {
             if (this.lower != null) {
                 return this.lower.locate(filter);
             }
@@ -258,7 +286,8 @@ class Node {
         return this;
     }
     remove(key) {
-        if (key === this.key) {
+        let position = (0, exports.COLLATOR)(key, this.key);
+        if (position === "IDENTICAL") {
             if (this.lower != null) {
                 if (this.upper != null) {
                     let { key, value } = this.upper.getMinimum();
@@ -281,7 +310,7 @@ class Node {
                 }
             }
         }
-        if (key < this.key) {
+        if (position === "ONE_COMES_FIRST") {
             if (this.lower != null) {
                 this.setLower(this.lower.remove(key));
             }
@@ -367,9 +396,13 @@ class Node {
         this.upper = upper;
     }
 }
+exports.GenericNode = GenericNode;
+;
+class Node extends GenericNode {
+}
 exports.Node = Node;
 ;
-class Tree {
+class GenericTree {
     constructor() {
         this.root = undefined;
     }
@@ -392,7 +425,7 @@ class Tree {
     }
     insert(key, value) {
         var _a;
-        let node = new Node(key, value);
+        let node = new GenericNode(key, value);
         if (this.root != null) {
             this.root = this.root.insert(node);
             (_a = this.root) === null || _a === void 0 ? void 0 : _a.setParent(undefined);
@@ -428,6 +461,10 @@ class Tree {
     vacate() {
         this.root = undefined;
     }
+}
+exports.GenericTree = GenericTree;
+;
+class Tree extends GenericTree {
 }
 exports.Tree = Tree;
 ;
