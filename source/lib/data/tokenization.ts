@@ -16,7 +16,7 @@ export class UnexpectedEndError extends Error {
 		super();
 	}
 
-	toString(): string {
+	get message(): string {
 		return `Unexpectedly reached end of token stream!`;
 	}
 };
@@ -26,7 +26,7 @@ export class UnexpectedExecutionError extends Error {
 		super();
 	}
 
-	toString(): string {
+	get message(): string {
 		return `Unexpectedly reached code believed to be unreachable!`;
 	}
 };
@@ -39,7 +39,7 @@ export class UnexpectedTokenError extends Error {
 		this.token = token;
 	}
 
-	toString(): string {
+	get message(): string {
 		return `Unexpected token "${this.token.type}" at row ${this.token.row}, col ${this.token.col}!`;
 	}
 };
@@ -54,7 +54,7 @@ export class UnrecognizedTokenError extends Error {
 		this.col = col;
 	}
 
-	toString(): string {
+	get message(): string {
 		return `Unrecognized token at row ${this.row}, col ${this.col}!`;
 	}
 };
@@ -64,7 +64,7 @@ export class UnexpectedAnchor extends Error {
 		super();
 	}
 
-	toString(): string {
+	get message(): string {
 		return `Unexpected anchor in regular expression!`;
 	}
 };
