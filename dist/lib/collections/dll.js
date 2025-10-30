@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DoublyLinkedList = exports.DoublyLinkedListNode = void 0;
 class DoublyLinkedListNode {
+    value;
+    last;
+    next;
     constructor(value) {
         this.value = value;
     }
@@ -47,6 +50,8 @@ class DoublyLinkedListNode {
 exports.DoublyLinkedListNode = DoublyLinkedListNode;
 ;
 class DoublyLinkedList {
+    head;
+    tail;
     constructor() {
         this.head = undefined;
         this.tail = undefined;
@@ -59,23 +64,21 @@ class DoublyLinkedList {
         }
     }
     append(value) {
-        var _a;
         let node = new DoublyLinkedListNode(value);
         if (this.tail != null) {
             this.tail.setNext(node);
         }
-        this.head = (_a = this.head) !== null && _a !== void 0 ? _a : node;
+        this.head = this.head ?? node;
         this.tail = node;
         return node;
     }
     prepend(value) {
-        var _a;
         let node = new DoublyLinkedListNode(value);
         if (this.head != null) {
             this.head.setLast(node);
         }
         this.head = node;
-        this.tail = (_a = this.tail) !== null && _a !== void 0 ? _a : node;
+        this.tail = this.tail ?? node;
         return node;
     }
     remove(node) {

@@ -1,17 +1,8 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const wtf = require("@joelek/wtf");
 const tokenization_1 = require("./tokenization");
-wtf.test(`Tokenizer should produce tokens until it fails to recognize a token.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+wtf.test(`Tokenizer should produce tokens until it fails to recognize a token.`, async (assert) => {
     let tokenizer = new tokenization_1.Tokenizer({
         "a": /a/
     });
@@ -22,10 +13,10 @@ wtf.test(`Tokenizer should produce tokens until it fails to recognize a token.`,
         type: "a",
         value: "a"
     });
-    yield assert.throws(() => {
+    await assert.throws(() => {
         generator.next();
     });
-}));
+});
 wtf.test(`Tokenizer should produce the longest possible tokens.`, (assert) => {
     let tokenizer = new tokenization_1.Tokenizer({
         "a": /a/,
@@ -80,20 +71,20 @@ wtf.test(`Tokenizer should produce tokens with correct row and col values.`, (as
         }
     ]);
 });
-wtf.test(`Tokenizer should not accept expressions anchored to the start.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
-    yield assert.throws(() => {
+wtf.test(`Tokenizer should not accept expressions anchored to the start.`, async (assert) => {
+    await assert.throws(() => {
         let tokenizer = new tokenization_1.Tokenizer({
             "a": /^a/
         });
     });
-}));
-wtf.test(`Tokenizer should not accept expressions anchored to the end.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
-    yield assert.throws(() => {
+});
+wtf.test(`Tokenizer should not accept expressions anchored to the end.`, async (assert) => {
+    await assert.throws(() => {
         let tokenizer = new tokenization_1.Tokenizer({
             "a": /a$/
         });
     });
-}));
+});
 wtf.test(`Parser should not consume tokens when producers throw errors.`, (assert) => {
     function* generator() {
         yield {
@@ -174,7 +165,7 @@ wtf.test(`Parser should update the token type when the requested type is compati
         });
     });
 });
-wtf.test(`Parser should support filtering out irrelevant tokens.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+wtf.test(`Parser should support filtering out irrelevant tokens.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -207,19 +198,19 @@ wtf.test(`Parser should support filtering out irrelevant tokens.`, (assert) => _
             value: "b"
         });
     });
-}));
-wtf.test(`Parser should throw an error when attempting to read a token at the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should throw an error when attempting to read a token at the end of the token stream.`, async (assert) => {
     function* generator() { }
     let parser = new tokenization_1.Parser({
         "a": /a/
     }, generator());
-    yield assert.throws(() => {
+    await assert.throws(() => {
         parser.parse([], (read, peek, skip) => {
             read();
         });
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to read a token before the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to read a token before the end of the token stream.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -240,8 +231,8 @@ wtf.test(`Parser should not throw an error when attempting to read a token befor
             value: "a"
         });
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to read a token with a compatible type before the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to read a token with a compatible type before the end of the token stream.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -262,8 +253,8 @@ wtf.test(`Parser should not throw an error when attempting to read a token with 
             value: "a"
         });
     });
-}));
-wtf.test(`Parser should throw an error when attempting to read a token with an incompatible type before the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should throw an error when attempting to read a token with an incompatible type before the end of the token stream.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -276,13 +267,13 @@ wtf.test(`Parser should throw an error when attempting to read a token with an i
         "a": /a/,
         "b": /b/
     }, generator());
-    yield assert.throws(() => {
+    await assert.throws(() => {
         parser.parse([], (read, peek, skip) => {
             read("b");
         });
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to peek a token at the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to peek a token at the end of the token stream.`, async (assert) => {
     function* generator() { }
     let parser = new tokenization_1.Parser({
         "a": /a/
@@ -290,8 +281,8 @@ wtf.test(`Parser should not throw an error when attempting to peek a token at th
     parser.parse([], (read, peek, skip) => {
         assert.equals(peek(), undefined);
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to peek a token before the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to peek a token before the end of the token stream.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -312,8 +303,8 @@ wtf.test(`Parser should not throw an error when attempting to peek a token befor
             value: "a"
         });
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to peek a token with a compatible type before the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to peek a token with a compatible type before the end of the token stream.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -334,8 +325,8 @@ wtf.test(`Parser should not throw an error when attempting to peek a token with 
             value: "a"
         });
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to peek a token with an incompatible type before the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to peek a token with an incompatible type before the end of the token stream.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -351,8 +342,8 @@ wtf.test(`Parser should not throw an error when attempting to peek a token with 
     parser.parse([], (read, peek, skip) => {
         assert.equals(peek("b"), undefined);
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to skip a token at the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to skip a token at the end of the token stream.`, async (assert) => {
     function* generator() { }
     let parser = new tokenization_1.Parser({
         "a": /a/
@@ -360,8 +351,8 @@ wtf.test(`Parser should not throw an error when attempting to skip a token at th
     parser.parse([], (read, peek, skip) => {
         assert.equals(skip(), undefined);
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to skip a token before the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to skip a token before the end of the token stream.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -382,8 +373,8 @@ wtf.test(`Parser should not throw an error when attempting to skip a token befor
             value: "a"
         });
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to skip a token with a compatible type before the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to skip a token with a compatible type before the end of the token stream.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -399,8 +390,8 @@ wtf.test(`Parser should not throw an error when attempting to skip a token with 
     parser.parse([], (read, peek, skip) => {
         assert.equals(skip("a"), undefined);
     });
-}));
-wtf.test(`Parser should not throw an error when attempting to skip a token with an incompatible type before the end of the token stream.`, (assert) => __awaiter(void 0, void 0, void 0, function* () {
+});
+wtf.test(`Parser should not throw an error when attempting to skip a token with an incompatible type before the end of the token stream.`, async (assert) => {
     function* generator() {
         yield {
             row: 1,
@@ -421,4 +412,4 @@ wtf.test(`Parser should not throw an error when attempting to skip a token with 
             value: "a"
         });
     });
-}));
+});

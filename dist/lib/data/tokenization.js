@@ -5,7 +5,7 @@ class UnexpectedEndError extends Error {
     constructor() {
         super();
     }
-    toString() {
+    get message() {
         return `Unexpectedly reached end of token stream!`;
     }
 }
@@ -15,30 +15,33 @@ class UnexpectedExecutionError extends Error {
     constructor() {
         super();
     }
-    toString() {
+    get message() {
         return `Unexpectedly reached code believed to be unreachable!`;
     }
 }
 exports.UnexpectedExecutionError = UnexpectedExecutionError;
 ;
 class UnexpectedTokenError extends Error {
+    token;
     constructor(token) {
         super();
         this.token = token;
     }
-    toString() {
+    get message() {
         return `Unexpected token "${this.token.type}" at row ${this.token.row}, col ${this.token.col}!`;
     }
 }
 exports.UnexpectedTokenError = UnexpectedTokenError;
 ;
 class UnrecognizedTokenError extends Error {
+    row;
+    col;
     constructor(row, col) {
         super();
         this.row = row;
         this.col = col;
     }
-    toString() {
+    get message() {
         return `Unrecognized token at row ${this.row}, col ${this.col}!`;
     }
 }
@@ -48,13 +51,21 @@ class UnexpectedAnchor extends Error {
     constructor() {
         super();
     }
-    toString() {
+    get message() {
         return `Unexpected anchor in regular expression!`;
     }
 }
 exports.UnexpectedAnchor = UnexpectedAnchor;
 ;
 class Parser {
+    expressions;
+    generator;
+    tokens;
+    token_index;
+    filter;
+    bound_read = this.read.bind(this);
+    bound_peek = this.peek.bind(this);
+    bound_skip = this.skip.bind(this);
     getNextToken() {
         if (this.token_index < this.tokens.length) {
             return this.tokens[this.token_index];
@@ -83,7 +94,10 @@ class Parser {
         }
         for (let type of types) {
             if (this.expressions[type].test(token.value)) {
-                return Object.assign(Object.assign({}, token), { type: type });
+                return {
+                    ...token,
+                    type: type
+                };
             }
         }
     }
@@ -103,7 +117,10 @@ class Parser {
         }
         for (let type of types) {
             if (this.expressions[type].test(token.value)) {
-                return Object.assign(Object.assign({}, token), { type: type });
+                return {
+                    ...token,
+                    type: type
+                };
             }
         }
         throw new UnexpectedTokenError(token);
@@ -142,9 +159,6 @@ class Parser {
         }
     }
     constructor(expressions, generator) {
-        this.bound_read = this.read.bind(this);
-        this.bound_peek = this.peek.bind(this);
-        this.bound_skip = this.skip.bind(this);
         this.expressions = {};
         for (let type in expressions) {
             let expression = expressions[type];
@@ -305,6 +319,7 @@ exports.Parser = Parser;
 ;
 // The first successfully matched branch of a branched expression is matched instead of the longest successfully matched branch.
 class Tokenizer {
+    expressions;
     constructor(expressions) {
         this.expressions = {};
         for (let type in expressions) {

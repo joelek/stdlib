@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NamespacedMessageRouter = exports.MessageRouter = void 0;
 class MessageRouter {
+    observers;
     constructor() {
         this.observers = Object.create(null);
     }
@@ -37,6 +38,7 @@ class MessageRouter {
 exports.MessageRouter = MessageRouter;
 ;
 class NamespacedMessageRouter {
+    routers;
     constructor() {
         this.routers = Object.create(null);
     }

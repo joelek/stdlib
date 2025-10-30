@@ -4,6 +4,8 @@ exports.LinkedHashMap = void 0;
 const dll_1 = require("./dll");
 const rhh_1 = require("./rhh");
 class LinkedHashMap {
+    list;
+    hash;
     constructor() {
         this.list = new dll_1.DoublyLinkedList();
         this.hash = new rhh_1.RobinHoodHash();

@@ -10,26 +10,26 @@ export type Token<A extends string> = {
 };
 export declare class UnexpectedEndError extends Error {
     constructor();
-    toString(): string;
+    get message(): string;
 }
 export declare class UnexpectedExecutionError extends Error {
     constructor();
-    toString(): string;
+    get message(): string;
 }
 export declare class UnexpectedTokenError extends Error {
     readonly token: Token<string>;
     constructor(token: Token<string>);
-    toString(): string;
+    get message(): string;
 }
 export declare class UnrecognizedTokenError extends Error {
     readonly row: number;
     readonly col: number;
     constructor(row: number, col: number);
-    toString(): string;
+    get message(): string;
 }
 export declare class UnexpectedAnchor extends Error {
     constructor();
-    toString(): string;
+    get message(): string;
 }
 export type Producer<A extends Expressions<A>, B> = (read: Parser<A>["read"], peek: Parser<A>["peek"], skip: Parser<A>["skip"]) => B;
 export type Producers<A extends Expressions<A>, B extends any[]> = {

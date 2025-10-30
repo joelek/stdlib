@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Codepage = exports.CodepageEncodingError = exports.CodepageDecodingError = void 0;
 class CodepageDecodingError extends Error {
+    byte;
     constructor(byte, message) {
         super(message);
         this.byte = byte;
@@ -10,6 +11,7 @@ class CodepageDecodingError extends Error {
 exports.CodepageDecodingError = CodepageDecodingError;
 ;
 class CodepageEncodingError extends Error {
+    string;
     constructor(string, message) {
         super(message);
         this.string = string;
@@ -18,6 +20,8 @@ class CodepageEncodingError extends Error {
 exports.CodepageEncodingError = CodepageEncodingError;
 ;
 class Codepage {
+    string_from_byte;
+    byte_from_string;
     constructor(codepoints) {
         this.string_from_byte = new Map();
         this.byte_from_string = new Map();

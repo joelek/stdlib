@@ -27,10 +27,16 @@ const COLLATOR = (one, two) => {
 };
 exports.COLLATOR = COLLATOR;
 class GenericNode {
+    key;
+    value;
+    height;
+    parent;
+    lower;
+    upper;
     constructor(key, value, height) {
         this.key = key;
         this.value = value;
-        this.height = height !== null && height !== void 0 ? height : 1;
+        this.height = height ?? 1;
         this.parent = undefined;
         this.lower = undefined;
         this.upper = undefined;
@@ -95,12 +101,10 @@ class GenericNode {
         throw `Expected code to be unreachable!`;
     }
     computeBalance() {
-        var _a, _b, _c, _d;
-        return ((_b = (_a = this.upper) === null || _a === void 0 ? void 0 : _a.height) !== null && _b !== void 0 ? _b : 0) - ((_d = (_c = this.lower) === null || _c === void 0 ? void 0 : _c.height) !== null && _d !== void 0 ? _d : 0);
+        return (this.upper?.height ?? 0) - (this.lower?.height ?? 0);
     }
     computeHeight() {
-        var _a, _b, _c, _d;
-        return Math.max(((_b = (_a = this.lower) === null || _a === void 0 ? void 0 : _a.height) !== null && _b !== void 0 ? _b : 0), ((_d = (_c = this.upper) === null || _c === void 0 ? void 0 : _c.height) !== null && _d !== void 0 ? _d : 0)) + 1;
+        return Math.max((this.lower?.height ?? 0), (this.upper?.height ?? 0)) + 1;
     }
     entry() {
         return {
@@ -403,6 +407,7 @@ class Node extends GenericNode {
 exports.Node = Node;
 ;
 class GenericTree {
+    root;
     constructor() {
         this.root = undefined;
     }
@@ -424,11 +429,10 @@ class GenericTree {
         }
     }
     insert(key, value) {
-        var _a;
         let node = new GenericNode(key, value);
         if (this.root != null) {
             this.root = this.root.insert(node);
-            (_a = this.root) === null || _a === void 0 ? void 0 : _a.setParent(undefined);
+            this.root?.setParent(undefined);
         }
         else {
             this.root = node;
@@ -442,20 +446,17 @@ class GenericTree {
         return length;
     }
     locate(filter) {
-        var _a;
         if (this.root != null) {
-            return (_a = this.root.locate(filter)) === null || _a === void 0 ? void 0 : _a.entry();
+            return this.root.locate(filter)?.entry();
         }
     }
     lookup(key) {
-        var _a;
-        return (_a = this.locate({ operator: "=", key: key })) === null || _a === void 0 ? void 0 : _a.value;
+        return this.locate({ operator: "=", key: key })?.value;
     }
     remove(key) {
-        var _a;
         if (this.root != null) {
             this.root = this.root.remove(key);
-            (_a = this.root) === null || _a === void 0 ? void 0 : _a.setParent(undefined);
+            this.root?.setParent(undefined);
         }
     }
     vacate() {

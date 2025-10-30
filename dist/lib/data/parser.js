@@ -4,12 +4,14 @@ exports.Parser = void 0;
 const integer_1 = require("../asserts/integer");
 const chunk_1 = require("./chunk");
 class Parser {
+    buffer;
+    offset;
     constructor(buffer, offset) {
         this.buffer = buffer;
-        this.offset = offset !== null && offset !== void 0 ? offset : 0;
+        this.offset = offset ?? 0;
     }
     chunk(length) {
-        length = length !== null && length !== void 0 ? length : this.buffer.length - this.offset;
+        length = length ?? this.buffer.length - this.offset;
         if (this.offset + length > this.buffer.length) {
             throw new Error(`Expected to read at least ${length} bytes!`);
         }
@@ -28,7 +30,7 @@ class Parser {
     }
     signed(length, endian) {
         let value = this.unsigned(length, endian);
-        let bias = Math.pow(2, (length * 8 - 1));
+        let bias = 2 ** (length * 8 - 1);
         if (value >= bias) {
             value -= bias + bias;
         }

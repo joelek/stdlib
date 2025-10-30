@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RobinHoodHash = void 0;
 class RobinHoodHash {
+    slots;
+    slotsUsed;
     constructor() {
         this.slots = new Array(1);
         this.slotsUsed = 0;
@@ -84,7 +86,10 @@ class RobinHoodHash {
                 this.slots[slotIndex] = undefined;
                 break;
             }
-            this.slots[slotIndex] = Object.assign(Object.assign({}, nextSlot), { probeDistance: nextSlot.probeDistance - 1 });
+            this.slots[slotIndex] = {
+                ...nextSlot,
+                probeDistance: nextSlot.probeDistance - 1
+            };
             slotIndex = (slotIndex + 1) % this.slots.length;
         }
     }
@@ -117,7 +122,7 @@ class RobinHoodHash {
             if (slot == null) {
                 continue;
             }
-            let { key, value } = Object.assign({}, slot);
+            let { key, value } = { ...slot };
             yield {
                 key,
                 value
