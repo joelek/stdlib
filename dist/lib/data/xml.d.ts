@@ -124,9 +124,9 @@ export declare const xml: {
     attribute(key: string | XMLName, value: string): XMLAttribute;
     declaration(version: string, encoding: string | undefined, standalone: string | undefined): XMLDeclaration;
     doctype(name: string, type: string | undefined, uri: string | undefined): XMLDoctype;
+    document(declaration: XMLDeclaration | undefined, doctype: XMLDoctype | undefined, root: XMLElement): XMLDocument;
     element(name: string | XMLName, attributes?: readonly XMLAttribute[] | undefined, nodes?: readonly XMLNode[] | undefined): XMLElement;
     name(namespace: string | undefined, name: string): XMLName;
     text(value: string): XMLText;
 };
-export declare function parseDocument(string: string): XMLDocument;
 export {};

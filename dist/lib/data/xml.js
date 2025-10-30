@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseDocument = exports.xml = exports.XMLDocument = exports.XMLDoctype = exports.XMLDeclaration = exports.XMLElement = exports.XMLText = exports.XMLNode = exports.XMLClosingTag = exports.XMLOpeningTag = exports.XMLAttribute = exports.XMLName = exports.XMLEntity = exports.UnexpectedValueError = void 0;
+exports.xml = exports.XMLDocument = exports.XMLDoctype = exports.XMLDeclaration = exports.XMLElement = exports.XMLText = exports.XMLNode = exports.XMLClosingTag = exports.XMLOpeningTag = exports.XMLAttribute = exports.XMLName = exports.XMLEntity = exports.UnexpectedValueError = void 0;
 const tokenization_1 = require("./tokenization");
 class UnexpectedValueError extends Error {
     value;
@@ -442,6 +442,9 @@ exports.xml = {
     doctype(...parameters) {
         return new XMLDoctype(...parameters);
     },
+    document(...parameters) {
+        return new XMLDocument(...parameters);
+    },
     element(...parameters) {
         return new XMLElement(...parameters);
     },
@@ -452,10 +455,3 @@ exports.xml = {
         return new XMLText(...parameters);
     }
 };
-function parseDocument(string) {
-    let parser = TOKENIZER.tokenize(string);
-    let document = XMLDocument.parse(parser);
-    return document;
-}
-exports.parseDocument = parseDocument;
-;
