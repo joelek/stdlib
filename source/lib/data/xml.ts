@@ -474,6 +474,9 @@ export const xml = {
 	doctype(...parameters: ConstructorParameters<typeof XMLDoctype>) {
 		return new XMLDoctype(...parameters);
 	},
+	document(...parameters: ConstructorParameters<typeof XMLDocument>) {
+		return new XMLDocument(...parameters);
+	},
 	element(...parameters: ConstructorParameters<typeof XMLElement>) {
 		return new XMLElement(...parameters);
 	},
@@ -483,10 +486,4 @@ export const xml = {
 	text(...parameters: ConstructorParameters<typeof XMLText>) {
 		return new XMLText(...parameters);
 	}
-};
-
-export function parseDocument(string: string): XMLDocument {
-	let parser = TOKENIZER.tokenize(string);
-	let document = XMLDocument.parse(parser);
-	return document;
 };
