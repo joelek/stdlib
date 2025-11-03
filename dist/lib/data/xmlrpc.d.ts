@@ -1,0 +1,36 @@
+import { XMLElement, XMLNode } from "./xml";
+export declare function createValue(value: any): XMLNode;
+export declare function parseValue(element: XMLElement): any;
+export declare function createDate(value: Date): XMLElement;
+export declare function parseDate(element: XMLElement): Date;
+export declare function createArray(values: Array<any>): XMLElement;
+export declare function parseArray(element: XMLElement): Array<any>;
+export declare function createRecord(values: Record<string, any>): XMLElement;
+export declare function parseRecord(element: XMLElement): Record<string, any>;
+export declare function createBinary(value: Uint8Array): XMLElement;
+export declare function parseBinary(element: XMLElement): Uint8Array;
+export declare function createBoolean(value: boolean): XMLElement;
+export declare function parseBoolean(element: XMLElement): boolean;
+export declare function createString(value: string): XMLElement;
+export declare function parseString(element: XMLElement): string;
+export declare function createNumber(value: number): XMLElement;
+export declare function parseNumber(element: XMLElement): number;
+export declare function createDouble(value: number): XMLElement;
+export declare function parseDouble(element: XMLElement): number;
+export declare function createInt(value: number): XMLElement;
+export declare function parseInt(element: XMLElement): number;
+export declare function createLong(value: number): XMLElement;
+export declare function parseLong(element: XMLElement): number;
+export declare function createNull(value: null): XMLElement;
+export declare function parseNull(element: XMLElement): null;
+export type MethodCall = {
+    methodName: string;
+    parameters: Array<any>;
+};
+export declare function createMethodCall({ methodName, parameters }: MethodCall): XMLElement;
+export declare function parseMethodCall(element: XMLElement): MethodCall;
+export type MethodResponse = {
+    parameters: Array<any>;
+};
+export declare function createMethodResponse({ parameters }: MethodResponse): XMLElement;
+export declare function parseMethodResponse(element: XMLElement): MethodResponse;
